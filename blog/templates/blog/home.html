@@ -1,0 +1,16 @@
+<!-- PUT ALL HTML THAT YOU WANT IN THIS PAGE FOR HOME.HTML-->
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>home page</title>
+    </head>
+    <body>
+      <!-- we looped through each object in posts (we named them post)
+      and was able to access each member variable inside each object -->
+      {% for post in posts %}
+        <h1> {{ post.title }} </h1> 
+        <p> By {{ post.author }} on {{ post.date_posted }} </p>
+        <p> {{ post.content }} </p> 
+      {% endfor %}
+    </body>
+  </html>
