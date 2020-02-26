@@ -1,5 +1,5 @@
-## Run our program:  
-`python manage.py runserver`  
+**Run our program**: `python manage.py runserver`  
+**Create new app**: `python manage.py startapp [APPNAME]`  
 
 ## To add new pages/links to our site
 In order to create new links for our website, like `localhost:8000/blog` into our new website:  
