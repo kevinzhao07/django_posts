@@ -1,5 +1,13 @@
+## Quick Python Commands  
 **Run our program**: `python manage.py runserver`  
 **Create new app**: `python manage.py startapp [APPNAME]`  
+**Create a user to log into `/admin`**: `python manage.py createsuperuser`  
+> make sure a database has already been created, so migrations will allow us to make changes.
+**Run migrations on database**: `python manage.py makemigrations`
+> will either display `No changes detected` or show that there were changes (if database was previous created)  
+**Apply migrations onto database**: `python manage.py migrate`
+> will also work if no database was created, and will create a simple database structure to start with. in our project, our `authuser` table exists.
+
 
 ## To add new pages/links to our site
 In order to create new links for our website, like `localhost:8000/blog` into our new website:  
