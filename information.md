@@ -37,3 +37,20 @@ from there, we have to modify our `home.html` file to reflect changes and posts 
 > we have `{% for post in posts %}`. `post` is our locally defined variable and can be anything (post just seems related to posts). however, `posts` refers to the key of the dictionary `context` that we passed in earlier from our `views.py` file. though the same name, it is not the object inside `views.py` (that we declared outside of scope), it is referring to it because we passed it in as `'posts': posts`.
 
 since we passed in some context (appropriately named `posts`), we can then loop through that dictionary and for each entry (or `post` in our case), we can access the variables inside (`title`, `author`, etc.) we used `{{ }}` to access variables and `{% %}` for logic. 
+
+**Adding more context (passing into templates)**  
+we can add multiple pieces of data into our templates and can name then whatever. to refer to that data from our templates, we can use the same name but with `{{ }}`. we added `title` to our templates in order to see how an `{% if %}` and `{% else %}` works. if we were to pass in a `title`, `{% if title %}` would check if one existed, and if it did, we could do with it accordingly. after both `if` and `else` statements, an `{% endif %}` is needed to end the `if` statements.
+
+**What to do for repeated `html` between template files**  
+when we look at our files for now, there are a lot of repeated `html` segments that we don't want to keeo writing over again. we then created a `base.html` template with all the repeated code that can be inherited by the other files. we can create a `{% block content %}` and `{% endblock %}` for the text that needs to be changed from file to file. 
+> now we have to remove all the duplicated code from both `home.html` and `about.html`. for code specific to each file, we will wrap in a `{% block content %}` and `{% endblock content %}` and have `{% extends "folder/template.html" %}` where `template.html` is the file that contains all the duplicated code. 
+
+**Adding bootstrap/css files (popular with designing webpages)**  
+we will add it __locally__ since it's easier than downloading all of bootstrap and hosting it at the same time as our website. for css/js files that are `static`, we must add it into a `static` folder within our app. we can create a `static` folder within our root `blog` folder (our app folder), and again, inside the `static` folder (as we did with our `templates` folder) create a `blog` folder so we tell the machine where our `.css` and for what website they are being used for. 
+> wherever a `.css` files needs to be included, a `{% load static %}` must be put at the top of the page to indicate that we want to load a static file from our `static` directory. also, the `href=" "` tag is unique in that we must access the name of the file using `{% static 'nameOfApp/nameOfCssFile.css' %}`
+
+## Urls and Links  
+because we don't want to keep chaging our html whenever we change the names of our urls, especially in our template file (`base.html`). what we can do is instead of hardcoding the route, we can add `href="{% url 'nameOfRoute-in-urls.py-in-/blog' %}` in our case, our name was `blog-home`. 
+
+## Quick Boostrap Classes  
+`<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 

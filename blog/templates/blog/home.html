@@ -1,16 +1,17 @@
-<!-- PUT ALL HTML THAT YOU WANT IN THIS PAGE FOR HOME.HTML-->
-<!DOCTYPE html>
-  <html>
-    <head>
-      <title>home page</title>
-    </head>
-    <body>
-      <!-- we looped through each object in posts (we named them post)
+{% extends "blog/base.html" %}
+{% block content %}
+<!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
-      {% for post in posts %}
-        <h1> {{ post.title }} </h1> 
-        <p> By {{ post.author }} on {{ post.date_posted }} </p>
-        <p> {{ post.content }} </p> 
-      {% endfor %}
-    </body>
-  </html>
+  {% for post in posts %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2" href="#">{{ post.author }}</a>
+          <small class="text-muted">{{ post.date_posted }}</small>
+        </div>
+        <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+      </div>
+    </article>
+  {% endfor %}
+{% endblock content %}

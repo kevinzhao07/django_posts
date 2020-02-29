@@ -31,4 +31,4 @@ def home(request):
 
 # what user will see when landing on about page
 def about(request):
-  return render(request, 'blog/about.html')
+  return render(request, 'blog/about.html', {'title': 'titty'})
