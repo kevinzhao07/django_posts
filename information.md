@@ -5,10 +5,13 @@
 > make sure a database has already been created, so migrations will allow us to make changes.  
 
 **Run migrations on database**: `python manage.py makemigrations`
-> will either display `No changes detected` or show that there were changes. (if database was previous created)  
+> will either display `No changes detected` or show which new models were made. (if database was previous created)  
 
 **Apply migrations onto database**: `python manage.py migrate`  
 > will also work if no database was created, and will create a simple database structure to start with. in our project, our `authuser` table exists.
+
+**See SQL code represented from out database**: `python manage.py sqlmigrate [APPNAME] [MIGRATION NUMBER]` 
+**Run python-django shell**: `python manage.py shell`
 
 
 ## To add new pages/links to our site
@@ -61,6 +64,19 @@ we will add it __locally__ since it's easier than downloading all of bootstrap a
 
 ## Urls and Links  
 because we don't want to keep chaging our html whenever we change the names of our urls, especially in our template file (`base.html`). what we can do is instead of hardcoding the route, we can add `href="{% url 'nameOfRoute-in-urls.py-in-/blog' %}` in our case, our name was `blog-home`. 
+
+## Creating Databases with Models  
+we can create models for whatever type of data we want, and in our case, we will create a model for differenty types of `posts` and `users`. each of these `models` will be a class, and will have different attributes that you specify. 
+> we can access each field by `models.[type]Field()`.
+**note on databases**: a lot of fields have required/optional/no arguments, and those can be found at this documentation: https://docs.djangoproject.com/en/3.0/topics/db/models/. this contains every type of field that can be used within a django model.
+
+**Adding User Table and Foreign Keys**  
+since the user table was already created by django, in order to user it to fill our `author` attribute in our `Post` model, we can import it from `django.contrib.auth.models` and `import User`. this was pre-created by django. we will also make use of Foreign Keys, a one-to-one or many-to-one relationship to links posts and authors together, which is demonstrated by `models.ForeignKey`. there are two required arguments, first, another models table (which we will be linking to) and `on_delete`, which asks what to do when, in our case, the `User` gets deleted (only one way).  
+
+`migration` is useful because it allows us to make changes to a database even after it's been created without using or learning sql. always use `makemigrations` then `migrate`
+
+**Querying objects from previously created Models**  
+to see what is in our database and make sure everything's in order, we can use the python shell to display all our previously created `models` and what's inside. we will be using the commands `[MODEL NAME].objects.all()` to show a dictionary of previously created entries inside each `model`.
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
