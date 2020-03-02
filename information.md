@@ -10,8 +10,12 @@
 **Apply migrations onto database**: `python manage.py migrate`  
 > will also work if no database was created, and will create a simple database structure to start with. in our project, our `authuser` table exists.
 
-**See SQL code represented from out database**: `python manage.py sqlmigrate [APPNAME] [MIGRATION NUMBER]` 
-**Run python-django shell**: `python manage.py shell`
+**See SQL code represented from out database**: `python manage.py sqlmigrate [APPNAME] [MIGRATION NUMBER]`   
+**Run python-django shell**: `python manage.py shell`  
+**Query all users from a model**: `[MODEL NAME].objects.all()` 
+> `objects` supports `.first()`, `.filter([ATTRIBUTE = 'SOMETHING'])`, `.get(id=[ID])`, etc to bring out specific entries in a model. each objects has their own unique `id` and `pk` (primary key)
+
+
 
 
 ## To add new pages/links to our site
@@ -76,7 +80,21 @@ since the user table was already created by django, in order to user it to fill 
 `migration` is useful because it allows us to make changes to a database even after it's been created without using or learning sql. always use `makemigrations` then `migrate`
 
 **Querying objects from previously created Models**  
-to see what is in our database and make sure everything's in order, we can use the python shell to display all our previously created `models` and what's inside. we will be using the commands `[MODEL NAME].objects.all()` to show a dictionary of previously created entries inside each `model`.
+to see what is in our database and make sure everything's in order, we can use the python shell to display all our previously created `models` and what's inside. we will be using the commands `[MODEL NAME].objects.all()` to show a dictionary of previously created entries inside each `model`. these can be set to a variable, and they all have specific `id` and `pk` to filter them. 
+
+**Creating a [NAME OF MODEL] object**  
+we are able to create model objects in our shell command line as if it were a constructor. creating a post would entail: `var = Post(title='', content='', author=user)`, where `user` was our variable that came from filtering the `User` model. in order for that change to be reflected into our database, we have to `.save()` it.
+> to show how you want to display each model that's being printed in the shell, we can create a "dunder" function, in our case, `__str__(self)` to specify what we want to display when it is printed. 
+
+**What can we do with these created Models and objects?**  
+each of these newly crated objects can be set to a variable, and it's attributes can be accessed with `.` because we had a foreign key, we were able to access any `User` object inside of our `Post` object, which makes it easy to grab information about a user based on a `Post`. also, we are able to see all `Post` objects made by one `User` by running the command `[USER VARIABLE].[NAME OF MODEL].set.all()`. within this `set` command, we are also able to create more `Post` objects by adding onto the end `.create()` and fill in attribute fields.
+> creating it this way does not require any `.save()` or `author` attribute. 
+
+**Importing Models into `views.py` to be used with generating webpages**  
+in the `.py` file, we have to import our Model to use as context to pass onto our template `.html` files. our old `context` passed in dummy data from our `posts` that we created, but now since we imported our Models, there is no need for hardcoding data. we can do this by `from .models import [NAME OF MODEL]`, and now we are able to use this model as we please in this file.
+
+**Register our Models onto `admin` site**  
+we want to have specific models of our choosing show up on the admin page, so we are able to edit/add/and delete them from the `admin` GUI. it's really easy: we just have to run `admin.site.register([NAME OF MODEL])` in that `admin` GUI, we are able to edit users/content, etc. 
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
