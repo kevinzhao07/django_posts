@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from users import views as users_views
 
 # list of url patterns that have a path associated with them
 urlpatterns = [
     path('admin/', admin.site.urls),
     # /blog will map to blog.urls(.py), and there we have path that maps
     # onto views.(py)home(func)
-    path('', include('blog.urls'))
+    path('', include('blog.urls')),
+    path('register/', users_views.register, name="register"),
 ]

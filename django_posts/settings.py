@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # function defined there, which was BlogConfig
 INSTALLED_APPS = [
     'blog.apps.BlogConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

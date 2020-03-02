@@ -16,8 +16,6 @@
 > `objects` supports `.first()`, `.filter([ATTRIBUTE = 'SOMETHING'])`, `.get(id=[ID])`, etc to bring out specific entries in a model. each objects has their own unique `id` and `pk` (primary key)
 
 
-
-
 ## To add new pages/links to our site
 In order to create new links for our website, like `localhost:8000/blog` into our new website:  
 - we have to create a function inside `blog/views.py` and link it to the urlpatterns inside `blog/urls.py`.
@@ -95,6 +93,35 @@ in the `.py` file, we have to import our Model to use as context to pass onto ou
 
 **Register our Models onto `admin` site**  
 we want to have specific models of our choosing show up on the admin page, so we are able to edit/add/and delete them from the `admin` GUI. it's really easy: we just have to run `admin.site.register([NAME OF MODEL])` in that `admin` GUI, we are able to edit users/content, etc. 
+
+## Authenticating Users with Login/Password  
+we start off with creating a new app called `users`, since it will have it's own template,`views.py`, etc. this will be in the same directory as our `blog` app. 
+> make sure to add the newly created app in our `settings.py` in the project `.py` file.  
+
+**Accessing Django's built in Authentification System**  
+in our site, we would want the ability for new users to join and post, as well as existing users to be able to log in and edit their own posts, so we would have to use an user authentication form. since this process is very common, django has a lot of built in tools in place to help with authentication. 
+> we have to import `from django.contrib.auth.forms import UserCreationForms` in order to get access to these shortcuts.  
+
+**How to get `.html` files from other apps/directories**  
+since we have a new `.html` file in our new app, we still want to extend our `base.html` found in the `templates/blog` directory. however, we are still able to access the file in another app because it's in the `templates` directory. our heading can stay as `{% extends "blog/base.html" %}`.  
+
+**CSRF Token for Security**  
+in order for our form to work, we must add `{% csrf_token %}`. this protects against hacking and makes our website more secure. the form can be put anywhere using {{ form }}. the username entry, password, and password confirmation has already been set for us, so there's nothing to do but to drop the `form` somewhere.   
+> we can include `{{ form.as_p }}` to show our form in paragraph text.  
+
+**Adding Path to new App without `urls.py`**  
+in our new app, we are able to add it to our path in `urls.py` in our main project directory without creating a `[APPNAME].urls.py` by simply importing our `views.py` model in our newly created app (this works either way). in our main project directory, we can import `from [APPNAME] import views as [APPNAME]_views` directly.
+> this assumes that we have created a function in that `views.py` file. that function would take the form of: (as reference)
+```python 
+def register(request): # always have the request as an argument
+  form = UserCreationForm() # passing in optional context 
+  return render(request, 'users/register.html', {'form':form}) # request, template, context, etc.
+```  
+we will proceed to add a new path variable, specifying it's link, our register function and give it a name for now.  
+
+**Submitting the Form**  
+if we submit our form (with data) using `'POST'`, our app will create a `UserCreationForm` with that new data, but if the form was submitted without data, it simply redirects to an emtpy `UserCreatedForm`. we still have to make sure the form that we submitted is valid, so we can run the command `form.is_valid()`. 
+> the `username` or `password` field from our form is stored in `.cleaned_data`, which we have to use `.get()` to get. we can also print a message (one-time) of success to display to the user that their account was successful from `messages.success(request, [STRING])` by importing it from `django.contrib`. 
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
