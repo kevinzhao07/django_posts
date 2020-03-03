@@ -121,7 +121,12 @@ we will proceed to add a new path variable, specifying it's link, our register f
 
 **Submitting the Form**  
 if we submit our form (with data) using `'POST'`, our app will create a `UserCreationForm` with that new data, but if the form was submitted without data, it simply redirects to an emtpy `UserCreatedForm`. we still have to make sure the form that we submitted is valid, so we can run the command `form.is_valid()`. 
-> the `username` or `password` field from our form is stored in `.cleaned_data`, which we have to use `.get()` to get. we can also print a message (one-time) of success to display to the user that their account was successful from `messages.success(request, [STRING])` by importing it from `django.contrib`. 
+> the `username` or `password` field from our form is stored in `.cleaned_data`, which we have to use `.get()` to get. we can also print a message (one-time) of success to display to the user that their account was successful from `messages.success(request, [STRING])` by importing it from `django.contrib`.  
+after the user successfully creates an account, we would want to redirect them to another page. to do this, we can make use of `redirect` from `django.shortcuts`. 
+> this takes an argument of a url, or the name of a previously created url (in your other apps)
+
+**Displaying Messages**  
+messages in django are important because sometimes you need to tell the user something, and a small, one time pop-up is required. if the `messages.[NAME OF TAG]` is used in any `views.py` file, it should also be displayed in the base `base.html` file. to do this, a conditional to check for messages is needed and a loop through all messages is needed. the messages can be given a class of `alert-{{ message.tags }}`, which can be grabbed like so. 
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
