@@ -33,7 +33,7 @@ In order to create new links for our website, like `localhost:8000/blog` into ou
 ## Usage of Templates  
 
 `django` automatically looks for a sub-directory of `/templates` in each installed app (in our case `blog`).
-> convention to create another folder with same app name (`/blog`) inside `/templates` as to not confuse reader. the templates will go **inside** that folder. our structure is `django_posts` (overarching directory) > `/blog` (our app) > `/templates` > `/blog` > our .html files.
+> convention to create another directory with same app name (`/blog`) inside `/templates` as to not confuse reader. the templates will go **inside** that directory. our structure is `django_posts` (overarching directory) > `/blog` (our app) > `/templates` > `/blog` > our .html files.
 
 **<ins>Adding each app to list of installed apps</ins>**  
 we must add our app of 'blog' to our list of installed app, so django knows where to look for a `/templates` directory. within our blog application, we can find a file called `apps.py`, which has a `AppName-Config` function. Open up project's `settings.py` file to add path to this `AppName-Config` for our list of installed app, so django knows where to look. 
@@ -58,10 +58,10 @@ we can add multiple pieces of data into our templates and can name then whatever
 
 **<ins>What to do for repeated `html` between template files</ins>**  
 when we look at our files for now, there are a lot of repeated `html` segments that we don't want to keeo writing over again. we then created a `base.html` template with all the repeated code that can be inherited by the other files. we can create a `{% block content %}` and `{% endblock %}` for the text that needs to be changed from file to file. 
-> now we have to remove all the duplicated code from both `home.html` and `about.html`. for code specific to each file, we will wrap in a `{% block content %}` and `{% endblock content %}` and have `{% extends "folder/template.html" %}` where `template.html` is the file that contains all the duplicated code. 
+> now we have to remove all the duplicated code from both `home.html` and `about.html`. for code specific to each file, we will wrap in a `{% block content %}` and `{% endblock content %}` and have `{% extends "directory/template.html" %}` where `template.html` is the file that contains all the duplicated code. 
 
 **<ins>Adding bootstrap/css files (popular with designing webpages)</ins>**  
-we will add it __locally__ since it's easier than downloading all of bootstrap and hosting it at the same time as our website. for css/js files that are `static`, we must add it into a `static` folder within our app. we can create a `static` folder within our root `blog` folder (our app folder), and again, inside the `static` folder (as we did with our `templates` folder) create a `blog` folder so we tell the machine where our `.css` and for what website they are being used for. 
+we will add it __locally__ since it's easier than downloading all of bootstrap and hosting it at the same time as our website. for css/js files that are `static`, we must add it into a `static` directory within our app. we can create a `static` directory within our root `blog` directory (our app directory), and again, inside the `static` directory (as we did with our `templates` directory) create a `blog` directory so we tell the machine where our `.css` and for what website they are being used for. 
 > wherever a `.css` files needs to be included, a `{% load static %}` must be put at the top of the page to indicate that we want to load a static file from our `static` directory. also, the `href=" "` tag is unique in that we must access the name of the file using `{% static 'nameOfApp/nameOfCssFile.css' %}`
 
 ## Urls and Links  
@@ -75,7 +75,8 @@ we can create models for whatever type of data we want, and in our case, we will
 **<ins>Adding User Table and Foreign Keys</ins>**  
 since the user table was already created by django, in order to user it to fill our `author` attribute in our `Post` model, we can import it from `django.contrib.auth.models` and `import User`. this was pre-created by django. we will also make use of Foreign Keys, a one-to-one or many-to-one relationship to links posts and authors together, which is demonstrated by `models.ForeignKey`. there are two required arguments, first, another models table (which we will be linking to) and `on_delete`, which asks what to do when, in our case, the `User` gets deleted (only one way).  
 
-`migration` is useful because it allows us to make changes to a database even after it's been created without using or learning sql. always use `makemigrations` then `migrate`
+`migration` is useful because it allows us to make changes to a database even after it's been created without using or learning sql. 
+when making changes to any model, always use `makemigrations` then `migrate`.
 
 **<ins>Querying objects from previously created Models</ins>**  
 to see what is in our database and make sure everything's in order, we can use the python shell to display all our previously created `models` and what's inside. we will be using the commands `[MODEL NAME].objects.all()` to show a dictionary of previously created entries inside each `model`. these can be set to a variable, and they all have specific `id` and `pk` to filter them. 
@@ -85,14 +86,15 @@ we are able to create model objects in our shell command line as if it were a co
 > to show how you want to display each model that's being printed in the shell, we can create a "dunder" function, in our case, `__str__(self)` to specify what we want to display when it is printed. 
 
 **<ins>What can we do with these created Models and objects?</ins>**  
-each of these newly crated objects can be set to a variable, and it's attributes can be accessed with `.` because we had a foreign key, we were able to access any `User` object inside of our `Post` object, which makes it easy to grab information about a user based on a `Post`. also, we are able to see all `Post` objects made by one `User` by running the command `[USER VARIABLE].[NAME OF MODEL].set.all()`. within this `set` command, we are also able to create more `Post` objects by adding onto the end `.create()` and fill in attribute fields.
+each of these newly created objects can be set to a variable, and it's attributes can be accessed with `.` because we had a foreign key, we were able to access any `User` object inside of our `Post` object, which makes it easy to grab information about a user based on a `Post`. also, we are able to see all `Post` objects made by one `User` by running the command `[USER VARIABLE].[NAME OF MODEL].set.all()`. within this `set` command, we are also able to create more `Post` objects by adding onto the end `.create()` and fill in attribute fields.
 > creating it this way does not require any `.save()` or `author` attribute. 
 
 **<ins>Importing Models into `views.py` to be used with generating webpages</ins>**  
 in the `.py` file, we have to import our Model to use as context to pass onto our template `.html` files. our old `context` passed in dummy data from our `posts` that we created, but now since we imported our Models, there is no need for hardcoding data. we can do this by `from .models import [NAME OF MODEL]`, and now we are able to use this model as we please in this file.
 
 **<ins>Register our Models onto `admin` site</ins>**  
-we want to have specific models of our choosing show up on the admin page, so we are able to edit/add/and delete them from the `admin` GUI. it's really easy: we just have to run `admin.site.register([NAME OF MODEL])` in that `admin` GUI, we are able to edit users/content, etc. 
+we want to have specific models of our choosing show up on the admin page, so we are able to edit/add/and delete them from the `admin` GUI. it's really easy: we just have to run `admin.site.register([NAME OF MODEL])` in our app's `admin.py`, and we are able to edit users/content, etc. 
+> make sure to import the model from our `models.py`  
 
 ## Authenticating Users with Login/Password  
 we start off with creating a new app called `users`, since it will have it's own template,`views.py`, etc. this will be in the same directory as our `blog` app. 
@@ -151,7 +153,7 @@ django aleady takes care of login and logout forms for us, so all we must do it 
 > note that we still must create templates for these new urls as django doesn't create templates for us.  
 
 **<ins>Connect LoginView and LogoutView to our own templates</ins>**  
-because django doesn't create templates for us, we need to specify a route to our own template or our `/login` and `/logout` page will result in an error. we can pass an argument into our `.as_view()` file, `template_name="[FOLDER NAME]/[HTML.html]`. 
+because django doesn't create templates for us, we need to specify a route to our own template or our `/login` and `/logout` page will result in an error. we can pass an argument into our `.as_view()` file, `template_name="[directory NAME]/[HTML.html]`. 
 
 **<ins>Changing Link on Successful Login/Logout</ins>**  
 when using django's `Login` and `Logout` View, on successful login, it automatically redirects to `accounts/profile`. because we don't have that, we have to modify that automatic redirection into our project's `settings.py`. we have to add a setting called `LOGIN_REDIRECT_URL`, setting it equal to whatever page we want, in our case the `blog-home` page. 
@@ -178,6 +180,76 @@ def profile(request):
   return render(request, 'users/profile.html') # links to profile.html
 ```
 
+## User Profile and Uploading Pictures
+becuase the `User` model that django provides for us is pretty limited, we want to add the choice of a profile picture or other things to modify a user's profile. we can do this in our own `models.py` file, with the help of `OneToOneField` relationships (same as `ForeignKey`).
+
+**<ins>Creating and Inheriting other Models</ins>**  
+since we want to branch off of the `User` model that django gives us, we can create a new model to inherit a `OneToOne` relationship with it. our new model is profile, which means each `User` will have one profile and vice versa. we can also add as many other fields as we want (`CharField`, `ImageField`, etc). 
+> for our `ImageField()`, we can set a default .jpg photo, as well as an `upload_to` argument which states the directory that photos will be uploaded to.   
+
+**f strings**: f strings, or `f'{}`, are strings where you can embed expressions inside string literals. for example, if you want to print someone's username, we can do `f'{user.username}'s profile`, which will print a string of the user's username and combine this with other string literals. 
+
+we are able to access our profile from a `User` model by doing `user.profile`, since it is a one to one relationship, and vice versa because the profile model inherits from `User`. 
+
+**<ins>Image Saving</ins>**  
+since we don't have the ability to create profiles yet, we can manually create them in our `/admin` site. after doing that, we see that a new directory called `profile_pics` has been created (same directory as our entire project directory), where all the images that have been uploaded as profile pictures have been stored. 
+
+this is not good for the following reasons:
+1. if we have multiple models that want to save an image/file upload, then these new directories will clutter up our main project directory with extra directorys. 
+2. we want to store files and uploaded images not in our database because that would slow our site down. there is no need to hold an image for every user. 
+3. we want to edit our `settings.py` file and add a `MEDIA_ROOT` AND `MEDIA_URL`, where `MEDIA_ROOT` is the full path of where uploaded images will be saved and 
+
+**<ins>`MEDIA_ROOT` and `MEDIA_URL`</ins>**  
+we have to use `MEDIA_ROOT` and `MEDIA_URL` in order to save our photos in another directory. we want to set our `MEDIA_ROOT = os.path.join(BASE_DIR, 'media')` and `MEDIA_URL = '/media/`
+- `os.path.join` means no matter what OS we are using, a path will be generated correctly (let this be abstracted away)
+- `BASE_DIR` was a django created variable that specifies where our project's base directory directory is
+- `media` is the name of our directory to where our directory of uploaded photos will be stored (2 directories deep) 
+- `/media/` tells django where to look to find our directory of uploaded photos 
+now, when an image is uploaded into a new profile, a directory called `media/` appears in our project's directory (same directory as `manage.py`), and inside, a directory named `profile_pics` has appeared. inside that are our uploaded photos. 
+> `django_posts/` -> `media/` (as well as `django_posts/`) -> `profile_pics/` -> `img.jpg`  
+
+**<ins>Setting up Profile Template to work</ins>**  
+after image upload and creation is done, we can set up each user's profile. images will not work yet unless we add a snippet of code to our `urlpatterns` in our project directory's `url.py`. from the django documentation, https://docs.djangoproject.com/en/3.0/howto/static-files/#serving-files-uploaded-by-a-user-during-development, we can add:  
+```python
+# ... the rest of your imports goes here ...
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # ... the rest of your URLconf goes here ...
+] 
+
+if settings.DEBUG:
+  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # making it more readable
+```
+
+**<ins>Default Profile for Every User</ins>**  
+right now, the only way to create profiles is through the `/admin` settings, but we don't want to do that every time a new user is made. we need to make use of `django signals`, which would require us creating a `signals.py` file inside of our `users` app. we have to write `from django.db.models.signals import post_save` in order to have an action that happens post_save of a `user` being created (or saved).  
+> this only works when we have a signal and receiver. our `User` model from `django.contrib.auth.models` will be the signal (when it is saved), and our `Profile` model from `.models` will be the receiver.
+
+**function needed**: this simply creates and saves a profile, and imports signal
+```python
+# when our sender (User) is saved, (post_save), create_profile is called (as the receiver)
+@receiver(post_save, sender=User)
+
+""" arguments that receiver passed in:
+  - instance: is an instance of the model, User
+  - created: bool, was the User just created or not?
+  - sender: the User model
+  - kwargs: any extra keyword arguments (don't need to know)
+"""
+def create_profile(sender, instance, created, **kwargs):
+  if created:
+    Profile.objects.create(user=instance)
+
+# when our sender (User) is saved, (post_save), save_profile is called (as the receiver)
+@receiver(post_save, sender=User)
+
+# we have no need for created. after our profile was created, we can just do instance(our User).profile.save()
+def save_profile(sender, instance, **kwargs):
+  instance.profile.save()
+```
+also, in our `apps.py` file in our `users` app, we have to include a function called `ready(self)`, which simply imports `[APPNAME].signals`. this allows for a `Profile` to be created as soon as a `User` is created. importing signals will take in the code from the directory's `signals.py`.
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
