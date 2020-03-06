@@ -251,5 +251,53 @@ def save_profile(sender, instance, **kwargs):
 ```
 also, in our `apps.py` file in our `users` app, we have to include a function called `ready(self)`, which simply imports `[APPNAME].signals`. this allows for a `Profile` to be created as soon as a `User` is created. importing signals will take in the code from the directory's `signals.py`.
 
+## Updating User (Model) Profile
+we want to have a way for users to update their username and email (for now), and the way to go about that is through using a `UserUpdateForm`, inheriting from `forms.ModelForm)` [is built in].
+> if we want to edit our image, we have to do that through our `Profile` model, not our `User` model.
+
+```python 
+# to update the User form, inherit from forms.ModelForm
+class UserUpdateForm(forms.ModelForm):
+  email = forms.EmailField() # the extra form added from before
+
+    class Meta:
+      model = User # which Model are we targeting?
+      fields = ['username', 'email'] # which can we change?
+
+# to update the Profile form, same inherit as before
+class ProfileUpdateForm(forms.ModelForm):
+  # no additional fields added
+  class Meta:
+    model = Profile # affecting the Profile model
+    fields = ['image'] # we are only looking to change image
+```
+we can only allow users to update their email, username, and image _inside_ their profile, so where we `return render(request...)`, we can pass in context of the two `UserUpdateForm()` and `ProfileUpdateForm()`
+> since these are forms we are passing in as context, we can display them as `forms|crispy` in our template.
+
+**have forms already filled in with current info**: when we make a form, we sometimes would want the form to be filled in with the current user's information. this is easy to do and requires passing in an argument to that form (only passing in a model it expects). for example, in our `UserUpdateForm`, it can take an `instance` argument of another existing `User`. we want it to be our currently logged in user, we can give it an `instance = request.user`, which is the current user. the same goes for `Profile`, giving it `instance = instance.user.profile`.
+
+**forms and images**: when using forms to update an image/store an image, make sure to add `enctype="multipart/form-data"` so the site knows to save the picture in the background. 
+
+**<ins>Get Forms to Save Updated Content</ins>**  
+because now our profile template has a form, we can make it work by setting the same conditional as the register template, having a `request.method == "POST"`. this is only called when the form is submitted, where new files and new data will be stored. this will have to be passed in as additional arguments into the `UserUpdateForm` and `ProfileUpdateForm`. 
+
+**<ins>Resizing Images</ins>**  
+when large images are uploaded, we want to resize them to a point where they don't take up too much room because on the website, there's no need for a super big photo. we can use this by accessing the `Pillow` extension that we installed from django. (`from PIL import Image`) we have to override the save method in our `models.py`, with a simple `def save(self):` function.  
+this overwrites the existing save function:
+```python 
+# save function is already defined, we are overwriting it
+def save(self):
+    super().save() # calls the first parent save function
+
+    img = Image.open(self.image.path) # sets var img to the uploaded img
+
+    if img.height > 300 or img.width > 300: # if too big, change to max 300 pixels
+      output_size = (300, 300)
+      img.thumbnail(output_size) # resizes the image to 300x300
+      img.save(self.image.path) # resave and overwrite the large photo
+
+```
+
+
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
