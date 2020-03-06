@@ -286,8 +286,8 @@ when large images are uploaded, we want to resize them to a point where they don
 this overwrites the existing save function:
 ```python 
 # save function is already defined, we are overwriting it
-def save(self):
-    super().save() # calls the first parent save function
+def save(self, *args, **kwargs):
+    super().save(*args, **kwargs) # calls the first parent save function
 
     img = Image.open(self.image.path) # sets var img to the uploaded img
 
