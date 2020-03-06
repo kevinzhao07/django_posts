@@ -287,7 +287,7 @@ this overwrites the existing save function:
 ```python 
 # save function is already defined, we are overwriting it
 def save(self, *args, **kwargs):
-    super().save(*args, **kwargs) # calls the first parent save function
+    super().save(*args, **kwargs ) # calls the first parent save function
 
     img = Image.open(self.image.path) # sets var img to the uploaded img
 
@@ -297,7 +297,73 @@ def save(self, *args, **kwargs):
       img.save(self.image.path) # resave and overwrite the large photo
 
 ```
+## Class Based Views
+there are two types of views, function based (what we've worked with so far) and class based views. class based views allows for more functionality as it is built inside django already:
+1. `ListViews`: in YouTube, there's a link to see a _<ins>list</ins>_ of all your subscriptions to channels, which has the same functionality as a `ListView.
+2. `DetailedViews`: if you click on any video in YouTube, you'll be brought to a page with more _<ins>detail</ins>_, with comments, a video description, etc.
+3. `UpdateViews` and `DeleteViews`: same as _<ins>updating</ins>_ a video/blog or _<ins>deleting</ins>_ a video/blog. 
 
+**<ins>Rewriting Home Template with Class Based Views</ins>**  
+right now, our home template has a function based view where we are _<ins>listing</ins>_ posts. we can instead change it to a `ListView`, using the functionality and logic of django. we only have to specify a model, and in our case, we specify the `Post` model. 
+> we have to import all the `Views` using `from django.views.generic import ListView`, etc.
+
+because of django's name convention, it tries to search for a file in the form of: `[APP NAME].[MODEL NAME]_[TYPE OF VIEW].html`. currently, we link to `home.html`. also, we need to give our own variable name to the `Posts` being passed into the template, since django automatically gives it a name of `ObjectList`.  
+total fixes:
+- change `template_name` to whatever name our template was before, in our case, `blog/home.html`. 
+- change `context_object_name = 'posts'`, which was the name of our passed in context from before
+- set `ordering = ['-date_posted']`, to have our post order reverse chronologically. 
+- when we change our urlpatterns to use `PostListView`, we have to set an `as_view` attribute to change the class based view into an actual view template. 
+
+**<ins>Linking to each Post</ins>**  
+we also want a detailed view, which means we can create a class for that as well. this is simple, as it only takes the `model` argument and everything else with django standard. after we import this to our `urls.py`, we will try to link to every available post. django has this available already, as we can give variables to path links. to do this, we can write our path variable like so:   `path('post/<int:pk>', PostDetailView.as_view(), name='post-detail')`
+- since we want to display all of our `Posts`, we can have a `/post` to distinguish it from other links.
+- we can visit posts using their primary key, or `pk`, and we specify to django that we expect an integer there. (make sure it is in `<>`)
+- again, we must convert `PostDetailView` and add an `as_view()`.
+- alter `context_object_name = 'post'`, going against django convention (orignally named `object`).
+
+in our home page, we want to link every post to a "detailed view". to do this, we have to modify our href to include the `post-detail` and a `post-id` (which was our `pk` parameter that was passed in). 
+
+**<ins>Creating New Posts</ins>**  
+as with the other class views, we have to import `CreateView` to help us create new posts. there's an attribute we must give it, which specifies which elements of Post we want to modify, in our case, the title and content. when we add it to our `urlpatterns`, it follows the same rules as the other three. the template that is django default looks at is `post_form.html`. when we create that, we can still use `crispy_forms` to display the contents of our `Post` model.
+> note: the creation of posts, validating of posts, and all the logic exhibited inside `views.py` (as in the user app), is all abstracted away by the class views we used. 
+
+**overwrite save method**: the current save method, when saving a post, has no author attribute attached to it, so we must override the given `form_valid()` function. code is below: 
+```python 
+# override django's given form_valid()
+def form_valid(self, form): # given paramters of itself (logged in user) and form (of creating new Post)
+    form.instance.author = self.request.user # the new post's author is the user that's currently logged in
+    return super().form_valid(form) # still, call django's given form_valid()
+```
+**linking after creating new posts**: after a post is created, we want to go to the detail page of a post. to link back we have to use a `reverse()` function, which returns the absolute url. we have to do this modification in our `models.py`, because that is where django looks when a new model gets created. we must add a function `get_absolute_url(self)` using the `reverse()` function. the parameters passed in are the name of the route (in our case `'post-detail'`, and arguments, `kwargs={'pk': self.pk})` 
+> this is because `'post-detail'` expects an argument (named `pk`), and each `Post` entry has their own primary key value. 
+
+**login required**: as seen before, we used `@login_required` in our `users/views.py` to make sure if we wanted to modify a profile we had to be logged in first. however, we can't apply decorators to class based views, but we can use a mixin that django provides for us. it's as simple as `from django.contrib.auth.mixins import LoginRequiredMixin` and adding it as an additional argument. 
+
+**<ins>Updating Posts</ins>**  
+same as before, we have to import the `UpdateView` class view. it will have almost the exact same functionality as the `PostCreateView()` function we had before, as we want affec the model `Post`, have the same fields able to be altered, and have the same `form_valid()` function (with the logged in user as the author). 
+
+we have to update our `urlpatterns` to reflect this extra link, and it will have the same link as the `PostDetailView`, with an extra `/update/` after it. 
+> note that we still need the `pk` because we want to know which post is being updated. 
+
+**check for same author/user**: we only want the user that wrote a post to update it, so we have to use another mixin to check if the user is the actual author. this mixin is called `UserPassesTestMixin` and is passed as an extra parameter to `PostUpdateView()`. this allows us to have a `test_func()` that only grants user access if it returns `True`. 
+```python
+# test function must return true becuase of UserPassesTextMixin to work
+def test_func(self):
+    post = self.get_object() # built in django function that returns what object is currently being worked on (which post model)
+    return self.request.user == post.author # is the author == the logged in user?
+```
+> `PostUpdateView` doesn't require a template because it uses the same one as `PostCreateView`.  
+
+**<ins>Delete Post</ins>**  
+our delete post will also be a class view from django, which we will inerit (`DeleteView`). we will also require a user to be logged in and pass a test, so we can use the same `Mixins` from `PostUpdateView()`. the test will be same and can be copied too. when adding to our `urlpatterns`, it has the same form as `PostUpdateView()`, and instead of `update`, it will be `delete`.
+
+we do require a template asking for confirmation of deleting a post, which will be named `post_confirm_delete.html`.
+> we will have a cancel button, linking back to the detail page if the user changes their mind. the href will be set to: `href="{% url 'post-detail' post.id %}`, since we want to go back to the `'post-detail'` page that takes in a `pk` paramter, (or our post's id since we have access to the object).
+
+after deletion, django still needs to know where to redirect us afterwards. just like when creating a new post, we had to specify an absolute url, or in our case, a `success_url`. this can be added as a variable inside `PostDeleteView()` inside `views.py`.
+
+**<ins>Putting it All Together</ins>**  
+we are now able to create new posts, update, delete, and see details about our posts. now, we have to link everything together. because we only want logged in users to create posts, we have to add that to the part of our nav bar in `base.html` where the user is authenticated. also, we only want the user who created the post to update or delete it, and must write a conditional in `post_detail.html`.
 
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
