@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 {% block content %}
+<h1 class="mb-3"> Posts by {{ view.kwargs.username }} </h1>
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
   {% for post in posts %}

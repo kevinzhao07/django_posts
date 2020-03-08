@@ -365,5 +365,54 @@ after deletion, django still needs to know where to redirect us afterwards. just
 **<ins>Putting it All Together</ins>**  
 we are now able to create new posts, update, delete, and see details about our posts. now, we have to link everything together. because we only want logged in users to create posts, we have to add that to the part of our nav bar in `base.html` where the user is authenticated. also, we only want the user who created the post to update or delete it, and must write a conditional in `post_detail.html`.
 
+## Pagination (Separating Posts by Pages)
+when we have too many posts, we would want to separate them by pages in order to not have our server crash if we have too many loading in at one time. to have pagination, it is already built in like our other class based views. it's as simple as `paginate_by = X`, where X is how many `Post` per page.
+
+we have to modify our `home.html` to display buttons for next/previous page. django has a built in function `is_pagniated`, which asks if the current posts are paginated (in our case, they are). accessing page numbers, before pages, after pages, are already built in, so the code is simple:
+```html
+  <!-- is_paginated is a built in attribute, sees if model is paginated -->
+  {% if is_paginated %}
+
+    <!-- if page is not the first, have a button to link to first & previous. page_obj is the current page we are on. -->
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <!-- for every page available, if it's current page don't link anywhere, else link to 3 previous and 3 afterwards (max) -->
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-info mb-4 c-w">{{ num }}</a>
+
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    <!-- if page is not the last, have a button to link to last & next. page_obj is the current page we are on.-->
+    {% if page_obj.has_next %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+  <!-- make sure to always end. -->
+  {% endif %}
+```
+## Query Set  
+for now, we have a dead link on any user's name that we want to modify to display all posts from that user. this is the same as the `ListView` that we previous inherited in our `views.py`. we can update the name to `UserPostListView`, and have the template go to `user_post.html` instead. we have to override a method `get_query_set(self)`, that gets the username that we want to filter by. django has a built in "get object or get 404", which either gets the object we are filtering on (`User` exists), or a get a 404, which is when someone tries to type into the URL a `User` that does not exist. we have to import `get_object_or_404` from `django.shortcuts`.
+> also make sure to import `User`.
+
+```python
+# overwrite old django provided get_query_set(self)
+def get_queryset(self):
+  # get user from username, or return 404 if it doesn't exist
+  user = get_object_or_404(User, username=self.kwargs.get('username'))
+  # no need for ordering = ['-date_posted'], since django has built in .orderby()
+  return Post.objects.filter(author = user).order_by('-date_posted')
+```
+
+we also have to modify our `blog/urls.py`, adding a path to go to when we want to see a user's posts. we need to provide a string parameter for username, or `user/<str:username>`, to tell django that we expect a username parameter in the form of a string. since we specified before, we have to add a new file in our templates, `user_posts.html`.
+> to specify who the user is in our new template, it will be `{{ view.kwargs.username }}` instead of only `{{ post.author.username }}`
+
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
