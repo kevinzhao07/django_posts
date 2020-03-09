@@ -414,5 +414,28 @@ def get_queryset(self):
 we also have to modify our `blog/urls.py`, adding a path to go to when we want to see a user's posts. we need to provide a string parameter for username, or `user/<str:username>`, to tell django that we expect a username parameter in the form of a string. since we specified before, we have to add a new file in our templates, `user_posts.html`.
 > to specify who the user is in our new template, it will be `{{ view.kwargs.username }}` instead of only `{{ post.author.username }}`
 
+## Email and Password Reset
+if one were to forget their password on a site, they can request an email with a link to reset their password. this would require modification to our project's `urlpatterns` (same `urlpatterns` that has login, logout, profile, etc.). since password reset is already built into django's `auth_views`, we can use their `PasswordResetView`.
+django already has a few built in pages that we can utilize, like a reset confirmation form that redirects users after an email has been successfully sent. (we also have to modify the `urlspattern`)
+> this one is called `PasswordResetDoneView`.
+
+**<ins>Work with Django provided Views</ins>**  
+when we use django to reset our email, we have to confine to django's template usage. when submitting a valid email, django looks through the `urlpatterns` and tries to find a `password_reset_confirm.html` route that takes in two parameters, a `uidb64` and a `token`. the `uidb64` is the user's id encoded in base 64, in order to make sure that each user can only request their own password reset. we have to add this additional route of confirmation in our `urlpatterns`. make sure to add angle bracktes (`<>`) to indicate that we are accepting parameters, and have trailing `/` for each.
+
+we still get an error because our computer doesn't have a dedicated email server, but if we use gmail, we can still attempt to send emails. we have to use something called gmail's app password, which is only available through turning on two-factor authentification. still, for this to work, we have to modify our `settings.py`. the new lines are:
+```python
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '[YOUR USERNAME]@gmail.com'
+EMAIL_HOST_PASSWORD = '[YOUR **APP** PASSWORD]'
+```
+this will now work for any user who has a valid email now. lastly, we have to create a `password_reset_complete`, which will be the last of our created templates. the four `.html` files that we've added to our `urlpatterns` (based on django convention) is:
+1. `users/password_reset.html`, using `PasswordResetView`
+2. `users/password_reset_done.html`, using `PasswordResetDoneView`
+3. `users/password_reset_confirm.html`, using `PasswordResetConfirmView`
+4. `users/password_reset_complete.html`, using `PasswordResetCompleteView`
+
 ## Quick Boostrap Classes  
 `<div class="container">`: gives nice padding to whatever content is placed inside the div. for styling and spacing purposes. 
