@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, Comment
 
 # what user will see when landing on blog home page, we have passed in 
 # a template from the blog directory INSIDE our templates directory INSIDE
@@ -37,8 +37,15 @@ class UserPostListView(ListView):
     return Post.objects.filter(author = user).order_by('-date_posted')
 
 class PostDetailView(DetailView):
-  model = Post
-  context_object_name = 'post'
+  def get(self, request, *args, **kwargs):
+    obj = get_object_or_404(Post, pk=kwargs['pk'])
+    comments = Comment.objects.filter(post=obj)
+    comments = list(comments)
+    context = {
+      'post': obj,
+      'comments': comments
+    }
+    return render(request, 'blog/post_detail.html', context)
 
 class PostCreateView(LoginRequiredMixin, CreateView):
   model = Post
