@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
@@ -18,15 +19,22 @@
       <h2 class="article-title">{{ post.title }}</h2>
       <p class="article-content">{{ post.content }}</p>
       {% for comment in comments %}
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author.username }}</a>
-              <small class="text-muted">{{ comment.date_posted }}</small>
-            </div>
-            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ comment.content }}</a></h2>
-          </div>
+        <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author.username }}</a>
+        <small class="text-muted">{{ comment.date_posted }}</small>
+        <h2><a class="article-title">{{ comment.content }}</a></h2>
       {% endfor %}
       
+        <form method="POST">
+          {% csrf_token %}
+          <fieldset class="form-group">
+            <legend class="border-bottom mb-4"> Write Your Thoughts! </legend>
+            {{ form|crispy }}
+          </fieldset>
+          <div class="form-group">
+            <button class="btn btn-outline-info" type="submit"> Comment! </button>
+          </div> 
+        </form>
+
     </div>
   </article>
 {% endblock content %}

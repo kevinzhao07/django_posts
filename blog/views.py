@@ -1,11 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 # used to pass contents of a page from one place to another, used
 # here for linking between pages and deciding what to do
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
+from .forms import CommentForm
+from django.utils import timezone
 
 # what user will see when landing on blog home page, we have passed in 
 # a template from the blog directory INSIDE our templates directory INSIDE
@@ -36,16 +39,35 @@ class UserPostListView(ListView):
     user = get_object_or_404(User, username=self.kwargs.get('username'))
     return Post.objects.filter(author = user).order_by('-date_posted')
 
-class PostDetailView(DetailView):
-  def get(self, request, *args, **kwargs):
+def detail(request,*args, **kwargs):
+
+  def form_valid(form, request):
     obj = get_object_or_404(Post, pk=kwargs['pk'])
-    comments = Comment.objects.filter(post=obj)
-    comments = list(comments)
-    context = {
-      'post': obj,
-      'comments': comments
-    }
-    return render(request, 'blog/post_detail.html', context)
+    modelForm = form.save(commit = False)
+    modelForm.post = obj
+    modelForm.author = request.user
+    modelForm.date_posted = timezone.now()
+    modelForm.save()
+    return redirect('post-detail', pk=kwargs['pk'])
+
+  if request.method == "POST":
+    form = CommentForm(request.POST)
+    if form.is_valid():
+      messages.success(request, f'commented!')
+      return form_valid(form, request)
+  else:
+    form = CommentForm()
+
+  obj = get_object_or_404(Post, pk=kwargs['pk'])
+  comments = Comment.objects.filter(post=obj)
+  comments = list(comments)
+  context = {
+    'post': obj,
+    'comments': comments,
+    'form': form
+  }
+  return render(request, 'blog/post_detail.html', context)
+ 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
   model = Post
