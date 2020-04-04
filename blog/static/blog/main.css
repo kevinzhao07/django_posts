@@ -86,3 +86,22 @@ a.article-title:hover {
 .c-w {
   color: white !important;
 }
+
+.alert-warning {
+  background-color: #ffbe5e !important;
+  color: #333333;
+}
+
+.btn-warning {
+  background-color: #ffbe5e !important;
+  color: #333333;
+}
+
+.pinned {
+  color: #ff9d0a !important;
+}
+
+.pin {
+  float: right;
+  margin-top: -15px;
+}

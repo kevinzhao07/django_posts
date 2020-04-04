@@ -3,17 +3,73 @@
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
   {% for post in posts %}
-    <article class="media content-section">
+
+    {% if post.pin == True %}
+
+    <article class="media content-section" style="background-color:#E9F4FD">
       <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
       <div class="media-body">
+
         <div class="article-metadata">
           <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
           <small class="text-muted">{{ post.date_posted }}</small>
-        </div>
-        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+
+            {% if post.author == user %}
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="unpinned" value="{{ post.pk }}">
+                <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> Unpin Me! </button>
+              </form>
+            {% endif %}
+
+          </div>
+        <h2 class="article-title pinned" >{{ post.title }}</h2>
         <p class="article-content">{{ post.content }}</p>
+
+        {% if post.author == user %}
+          <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}"> Edit Post </a>   
+        {% endif %}
+        
+        <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}"> Write a Comment </a>        
+
       </div>
     </article>
+
+    {% endif %}
+  {% endfor %}
+
+  {% for post in posts %}
+    {% if post.pin == False %}
+
+    <article class="media content-section">
+      <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+      <div class="media-body">
+
+        <div class="article-metadata">
+          <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+          <small class="text-muted">{{ post.date_posted }}</small>
+
+            {% if post.author == user %}
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="pinned" value="{{ post.pk }}">
+                <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> Pin Me! </button>
+              </form>
+            {% endif %}
+
+          </div>
+        <h2 class="article-title">{{ post.title }}</h2>
+        <p class="article-content">{{ post.content }}</p>
+
+        {% if post.author == user %}
+          <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}"> Edit Post </a>   
+        {% endif %}
+        
+        <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}"> Write a Comment </a>    
+            
+      </div>
+    </article>
+    {% endif %}
   {% endfor %}
 
   {% if is_paginated %}
