@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment 
+from .models import Post, Comment, Like
 from .forms import CommentForm
 from django.utils import timezone
 import math
@@ -19,27 +19,32 @@ import math
 # NO LONGER USED!
 def home(request):
   # context is full of our dummy posts that we pass into our home template.
-  post = Post.objects.all()
-  post = post[::-1]
-  context = {
-    # our 'posts' variable will be equal to our posts data.
-    'posts': post,
-  }
+  post_all = Post.objects.all()
+  post_all = post_all[::-1]
+
+  likes = Like.objects.filter(user=request.user)
+  likes_count = likes.count()
+
+  list_likes = []
+  for liked_posts in likes:
+    list_likes.extend([liked_posts.post.pk])
 
   if request.method == "POST":
     
     postID_pin = request.POST.get('pinned', False)
     postID_unpin = request.POST.get('unpinned', False)
+    like = request.POST.get('like', False)
+    unlike = request.POST.get('unlike', False)
+    username = request.user.username
 
-    if postID_pin == False:
+    if postID_unpin != False:
       obj = get_object_or_404(Post, pk=postID_unpin)
       obj.pin = False
       obj.save()
       messages.info(request, f'Unpinned your post "{obj.title}"')
       return redirect('blog-home')
     
-    else:
-      username = request.user.username
+    elif postID_pin != False:
       user = get_object_or_404(User, username=username)
       posts = Post.objects.filter(author=user, pin=True)
       pinnedCount = posts.count()
@@ -55,16 +60,30 @@ def home(request):
         messages.warning(request, f'Pinned your post! "{obj.title}"')
         return redirect('blog-home')
 
+    elif like != False:
+      user_like = get_object_or_404(User, username=username)
+      post_like = get_object_or_404(Post, pk=like)
+      like_model = Like(user=user_like, post=post_like)
+      like_model.save()
+
+      messages.success(request, f'''You liked {post_like.author.username}'s post, "{post_like.title}"''')
+      return redirect('blog-home')
+
+    elif unlike != False:
+      user_unlike = get_object_or_404(User, username=username)
+      post_unlike = get_object_or_404(Post, pk=unlike)
+      like_to_delete = get_object_or_404(Like, user=user_unlike, post=post_unlike)
+      like_to_delete.delete()
+      messages.success(request, f'''You unliked {post_unlike.author.username}'s post, "{post_unlike.title}"''')
+      return redirect('blog-home')
+
+  context = {
+    # our 'posts' variable will be equal to our posts data.
+    'posts': post_all,
+    'likes_list': list_likes,
+  }
+
   return render(request, 'blog/home.html', context)
-
-
-class PostListView(ListView):
-  model = Post
-  template_name = 'blog/home.html'
-  context_object_name = 'posts'
-  ordering = ['-date_posted']
-  paginate_by = 5
-
 
 class UserPostListView(ListView):
   model = Post

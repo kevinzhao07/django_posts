@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load blog_extras %}
 {% block content %}
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
@@ -26,11 +27,26 @@
         <h2 class="article-title pinned" >{{ post.title }}</h2>
         <p class="article-content">{{ post.content }}</p>
 
-        {% if post.author == user %}
-          <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}"> Edit Post </a>   
+        {% if post.pk in likes_list %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="unlike" value="{{ post.pk }}">
+            <button class="btn btn-primary btn-sm mb-1 mt-1" style="color:white" type="submit" value="{{ post.pk }}"> Unlike </button>
+          </form>
+
+        {% else %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="like" value="{{ post.pk }}">
+            <button class="btn btn-secondary btn-sm mb-1 mt-1" style="color:white;" type="submit" value="{{ post.pk }}"> Like </button>
+          </form>
         {% endif %}
-        
-        <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}"> Write a Comment </a>        
+
+        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}" style="float:left;margin-left:190px"> Comment/Details </a>  
+
+        {% if post.author == user %}
+          <a class="btn btn-dark btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}" style="float:right"> Edit Post </a>   
+        {% endif %}
 
       </div>
     </article>
@@ -61,12 +77,28 @@
         <h2 class="article-title">{{ post.title }}</h2>
         <p class="article-content">{{ post.content }}</p>
 
+        {% if post.pk in likes_list %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="unlike" value="{{ post.pk }}">
+            <button class="btn btn-primary btn-sm mb-1 mt-1" style="color:white" type="submit" value="{{ post.pk }}"> Unlike </button>
+          </form>
+
+        {% else %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="like" value="{{ post.pk }}">
+            <button class="btn btn-secondary btn-sm mb-1 mt-1" style="color:white;" type="submit" value="{{ post.pk }}"> Like </button>
+          </form>
+        {% endif %}
+
+        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}" style="float:left;margin-left:190px"> Comment/Details </a>  
+
         {% if post.author == user %}
-          <a class="btn btn-warning btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}"> Edit Post </a>   
+          <a class="btn btn-dark btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}" style="float:right"> Edit Post </a>   
         {% endif %}
         
-        <a class="btn btn-info btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}"> Write a Comment </a>    
-            
+     
       </div>
     </article>
     {% endif %}

@@ -1,6 +1,6 @@
 # .py file is used for linking to other pages
 from django.urls import path
-from .views import PostListView, PostCreateView, PostUpdateView, PostDeleteView, UserPostListView
+from .views import PostCreateView, PostUpdateView, PostDeleteView, UserPostListView
 # import views.py in order to use home function (for linking)
 from . import views
 
