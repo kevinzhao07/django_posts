@@ -1,130 +1,100 @@
 {% extends "blog/base.html" %}
-{% load blog_extras %}
 {% block content %}
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
-  {% for post in posts %}
 
-    {% if post.pin == True %}
+  {% for post in page_obj %}
 
+    {% if post.pin == True%}
     <article class="media content-section" style="background-color:#E9F4FD">
-      <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-      <div class="media-body">
-
-        <div class="article-metadata">
-          <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-          <small class="text-muted">{{ post.date_posted }}</small>
-
-            {% if post.author == user %}
-              <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="unpinned" value="{{ post.pk }}">
-                <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> Unpin Me! </button>
-              </form>
-            {% endif %}
-
-          </div>
-        <h2 class="article-title pinned" >{{ post.title }}</h2>
-        <p class="article-content">{{ post.content }}</p>
-
-        {% if post.pk in likes_list %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="unlike" value="{{ post.pk }}">
-            <button class="btn btn-primary btn-sm mb-1 mt-1" style="color:white" type="submit" value="{{ post.pk }}"> Unlike </button>
-          </form>
-
-        {% else %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="like" value="{{ post.pk }}">
-            <button class="btn btn-secondary btn-sm mb-1 mt-1" style="color:white;" type="submit" value="{{ post.pk }}"> Like </button>
-          </form>
-        {% endif %}
-
-        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}" style="float:left;margin-left:190px"> Comment/Details </a>  
-
-        {% if post.author == user %}
-          <a class="btn btn-dark btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}" style="float:right"> Edit Post </a>   
-        {% endif %}
-
-      </div>
-    </article>
-
-    {% endif %}
-  {% endfor %}
-
-  {% for post in posts %}
-    {% if post.pin == False %}
-
+    {% else %}
     <article class="media content-section">
+    {% endif %}
       <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
       <div class="media-body">
 
         <div class="article-metadata">
           <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-          <small class="text-muted">{{ post.date_posted }}</small>
+          {% if post.pin == True %}
+            <small class="text-muted">{{ post.date_posted }} <i class="fas fa-map-pin fa-lg"></i></small>
+          {% else %}
+            <small class="text-muted">{{ post.date_posted }}</small>
+          {% endif %}
 
             {% if post.author == user %}
+              {% if post.pin == True %}
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="unpinned" value="{{ post.pk }}">
+                  <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> <i class="fas fa-bookmark"></i> Unpin </button>
+                </form>
+
+              {% else %}
               <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="pinned" value="{{ post.pk }}">
-                <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> Pin Me! </button>
+                <button class="btn btn-warning btn-sm mb-1 pin" type="submit" value="{{ post.pk }}"> <i class="far fa-bookmark"></i> Pin </button>
               </form>
+              {% endif %}
             {% endif %}
 
           </div>
-        <h2 class="article-title">{{ post.title }}</h2>
+          {% if post.pin == True %}
+            <h2 class="article-title pinned" >{{ post.title }}</h2>
+
+          {% else %}
+            <h2 class="article-title">{{ post.title }}</h2>
+
+          {% endif %}
         <p class="article-content">{{ post.content }}</p>
 
-        {% if post.pk in likes_list %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="unlike" value="{{ post.pk }}">
-            <button class="btn btn-primary btn-sm mb-1 mt-1" style="color:white" type="submit" value="{{ post.pk }}"> Unlike </button>
-          </form>
+        {% if user.is_authenticated %}
 
-        {% else %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="like" value="{{ post.pk }}">
-            <button class="btn btn-secondary btn-sm mb-1 mt-1" style="color:white;" type="submit" value="{{ post.pk }}"> Like </button>
-          </form>
+          {% if post.pk in likes_list %}
+            <form method="POST" style="float:left">
+              {% csrf_token %}
+              <input type="hidden" name="unlike" value="{{ post.pk }}">
+              <button class="btn btn-primary btn-sm mb-1 mt-1" style="color:white" type="submit" value="{{ post.pk }}"> <i class="fas fa-thumbs-up"></i>  Unlike </button>
+            </form>
+
+          {% else %}
+            <form method="POST" style="float:left">
+              {% csrf_token %}
+              <input type="hidden" name="like" value="{{ post.pk }}">
+              <button class="btn btn-secondary btn-sm mb-1 mt-1" style="color:white;" type="submit" value="{{ post.pk }}"> <i class="far fa-thumbs-up"></i>  Like </button>
+            </form>
+          {% endif %}
+
         {% endif %}
 
-        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}" style="float:left;margin-left:190px"> Comment/Details </a>  
+        <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'post-detail' post.id %}" style="float:left;margin-left:150px"> <i class="fas fa-comment-alt"></i>  Comment/Details </a>  
 
         {% if post.author == user %}
-          <a class="btn btn-dark btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}" style="float:right"> Edit Post </a>   
+          <a class="btn btn-dark btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}" style="float:right"> <i class="fas fa-edit"></i> Edit Post </a>   
         {% endif %}
         
      
       </div>
     </article>
+  {% endfor %}
+
+  {% if page_obj.has_previous %}
+    <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+      <a class="btn btn-info mb-4 c-w">{{ num }}</a>
+
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
     {% endif %}
   {% endfor %}
 
-  {% if is_paginated %}
-
-    {% if page_obj.has_previous %}
-      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-
-    {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-        <a class="btn btn-info mb-4 c-w">{{ num }}</a>
-
-      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-      {% endif %}
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-
+  {% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
   {% endif %}
 
 {% endblock content %}

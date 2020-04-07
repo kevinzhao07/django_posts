@@ -12,20 +12,32 @@
       </div>
       <h2 class="article-title">{{ post.title }}</h2>
       <p class="article-content">{{ post.content }}</p>
+      <p>Liked by:
+      {% for like in likes %}
+        <a class="mb-2" href="{% url 'user-posts' like.user.username %}">{{ like.user.username }},</a>
+      {% endfor %}</p>
       {% for comment in comments %}
-        <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author.username }}</a>
-        <small class="text-muted">{{ comment.date_posted }}</small>
-        <h2><a class="article-title">{{ comment.content }}</a></h2>
+      <article class="media content-section pt-3 mb-2" style="background-color:#f2f2f2;">
+          <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
+          <div class="media-body">
+
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
+              <small class="text-muted">{{ comment.date_posted }}</small>
+            </div>
+            <p> {{ comment.content }} </p>
+          </div>
+      </article>
       {% endfor %}
       
         <form method="POST">
           {% csrf_token %}
+          <legend class="border-bottom mt-4 mb-2">Have a Thought? Write a Comment!</legend>
           <fieldset class="form-group">
-            <legend class="border-bottom mb-4"> Write Your Thoughts! </legend>
             {{ form|crispy }}
           </fieldset>
           <div class="form-group">
-            <button class="btn btn-outline-info" type="submit"> Comment! </button>
+            <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: -10px;" type="submit"> Comment! </button>
           </div> 
         </form>
 

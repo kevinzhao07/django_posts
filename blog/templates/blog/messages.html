@@ -1,0 +1,11 @@
+{% extends "blog/base.html" %}
+{% block content %}
+{% for user in users %}
+    <div class="card">
+        <p class="name"> {{ user.username }} </p>
+        <img class="black-border large" src="{{ user.profile.image.url }}">
+    </div>
+
+
+{% endfor %}
+{% endblock %}

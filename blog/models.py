@@ -18,7 +18,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
   author = models.ForeignKey(User, on_delete=models.CASCADE)
-  content = models.TextField()
+  content = models.CharField(max_length=280)
   date_posted = models.DateTimeField(default=timezone.now)
   post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
@@ -32,3 +32,11 @@ class Like(models.Model):
 
   def __str__(self):
     return f'{self.user.username} liked a post'
+
+class Message(models.Model):
+  sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
+  receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
+  message = models.TextField()
+  date_sent = models.DateTimeField(default=timezone.now)
+  def __str__(self):
+    return f'{self.user.username} sent {self.message}'
