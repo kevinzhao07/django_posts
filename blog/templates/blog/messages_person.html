@@ -1,0 +1,51 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="color-palette">   
+    
+    <div class="lavendar circle"> </div>
+    <div class="dark-pink circle"> </div>
+    <div class="red circle"> </div>
+    <div class="orange circle"> </div>
+    <div class="yellow circle"> </div>
+    <div class="green circle"> </div>
+    <div class="light-blue circle"> </div>
+    <div class="regular-blue circle"> 
+        <div class="check">
+            <i class="fas fa-check fa-2x"></i> 
+        </div>
+    </div>
+    <div class="purple circle"> </div>
+
+</div>
+
+<div class="head">
+    <img class="rounded-circle article-img" src="{{ user_to_message.profile.image.url }}" style="float:left;">
+    <div style="float:left;">
+        <h3 style="margin-bottom:0px; margin-top: 4px;"> {{ username_logged_in }}</h3>
+        <small> Previous Message History </small> 
+    </div>    
+</div>
+
+<div class="all-messages">
+    {% for m in messages_all %}
+        {% if m.sender.username == username_logged_in %}
+            <p class="message-sent"> {{ m.message }} </p>
+        {% else %}
+            <p class="message-received"> {{ m.message }} </p>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<div class="message">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="message-form"> {{ form|crispy }} </div>
+        <div class="form-group">
+        <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: 0px;" type="submit"> <i class="fas fa-paper-plane"></i> Send </button>
+        </div> 
+    </form>
+</div>
+    
+{% endblock %}

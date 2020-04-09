@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment, Like
-from .forms import CommentForm
+from .models import Post, Comment, Like, Message
+from .forms import CommentForm, MessageForm
 from django.utils import timezone
 import math
 
@@ -201,3 +201,40 @@ def chat(request):
     'users': users,
   }
   return render(request, 'blog/messages.html', context)
+
+def messagesPerson(request, *args, **kwargs):
+
+  def form_valid(form, request):
+    receive = get_object_or_404(User, username=kwargs['username'])
+    send = request.user
+    messageForm = form.save(commit = False)
+    messageForm.date_posted = timezone.now()
+    messageForm.sender = send
+    messageForm.receiver = receive
+    messageForm.save()
+    return redirect('messages-person', username=kwargs['username'])
+
+  if request.method == "POST":
+    form = MessageForm(request.POST)
+    if form.is_valid():
+      messages.success(request, f'messaged!')
+      return form_valid(form, request)
+  else:
+    form = MessageForm()
+  
+  receive = get_object_or_404(User, username=kwargs['username'])
+  send = request.user
+  messages_all_one = Message.objects.filter(sender=send, receiver=receive)
+  messages_all_two = Message.objects.filter(sender=receive, receiver=send)
+  messages_all = messages_all_one.union(messages_all_two).order_by('date_sent')
+  # messages_all = list(messages_all_one) + list(messages_all_two)
+  user = request.user.username
+
+  context = {
+    'messages_all': messages_all,
+    'form': form,
+    'username_logged_in': user,
+    'user_to_message': receive,
+  }
+
+  return render(request, 'blog/messages_person.html', context)

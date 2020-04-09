@@ -39,4 +39,4 @@ class Message(models.Model):
   message = models.TextField()
   date_sent = models.DateTimeField(default=timezone.now)
   def __str__(self):
-    return f'{self.user.username} sent {self.message}'
+    return f'{self.sender.username} sent {self.receiver.username} a message'
