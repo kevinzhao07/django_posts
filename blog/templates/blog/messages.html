@@ -1,17 +1,29 @@
 {% extends "blog/base.html" %}
+{% load extras %}
 {% block content %}
-
-
 
 <div style="clear:both;">
 
     {% for user in users %}
 
-        <a href="{% url 'messages-person' user.username %}" class="name">
-            <div class="card">
-                <p class="name"> {{ user.username }} </p>
-                <img class="black-border large" src="{{ user.profile.image.url }}">
-            </div>
+        <a href="{% url 'messages-person' user.username %}" style="text-decoration: none; color: inherit;">
+
+        <div class="user">
+            <img class="black-border adjust" src="{{ user.profile.image.url }}">
+            <div class="summary">
+                <h2 class="name"> {{ user.username }}</h2>
+                {% with ""|add:our_username|add:user.username as key %}
+                <small class="total"> Total Messages: {{ message_count|get_item:key }} </small> 
+                <p style="font-size: 18px; font-weight: 500"> 
+                    {% if message_dictionary|get_item:key == None %}
+                    Say hi to your friend, {{ user.username }}!
+                    {% else %}
+                    {{ message_dictionary|get_item:key }} </p>
+                    {% endif %}
+                {% endwith %}
+            </div>    
+        </div>
+
         </a>
 
     {% endfor %}

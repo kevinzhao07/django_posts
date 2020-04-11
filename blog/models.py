@@ -38,5 +38,6 @@ class Message(models.Model):
   receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
   message = models.TextField()
   date_sent = models.DateTimeField(default=timezone.now)
+  color = models.CharField(max_length=20, default="regular-blue")
   def __str__(self):
     return f'{self.sender.username} sent {self.receiver.username} a message'

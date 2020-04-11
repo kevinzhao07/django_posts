@@ -197,8 +197,45 @@ def liked(request):
 
 def chat(request):
   users = User.objects.all()
+
+  if request.method == "POST":
+    color = request.POST.get('color', False)
+    username = request.POST.get('receiver', False)
+    receiver = get_object_or_404(User, username=username)
+    sender = request.user
+    messages_sender = list(Message.objects.filter(sender=sender, receiver=receiver))
+    messages_receiver = list(Message.objects.filter(sender=receiver, receiver=sender))
+    for message in messages_sender:
+      message.color = color
+      message.save()
+    
+    return redirect('messages-person', username=username)
+
+  message_out = Message.objects.filter(sender=request.user)
+  message_in = Message.objects.filter(receiver=request.user)
+  message_all = message_out.union(message_in).order_by('date_sent')
+  message_dictionary = {}
+  message_count = {}
+  
+  for m in message_all:
+    if m.sender == request.user:
+      front = m.sender.username
+      back = m.receiver.username 
+    else:
+      front = m.receiver.username
+      back = m.sender.username
+    key = front + back
+    message_dictionary[key] = m.message
+    if message_count.get(key) == None:
+      message_count[key] = 1
+    else:
+      message_count[key] += 1
+
   context = {
     'users': users,
+    'message_dictionary': message_dictionary,
+    'our_username': request.user.username,
+    'message_count': message_count,
   }
   return render(request, 'blog/messages.html', context)
 
@@ -225,9 +262,12 @@ def messagesPerson(request, *args, **kwargs):
   receive = get_object_or_404(User, username=kwargs['username'])
   send = request.user
   messages_all_one = Message.objects.filter(sender=send, receiver=receive)
+  if len(messages_all_one) == 0:
+    color = 'regular-blue'
+  else:
+    color = messages_all_one[0].color
   messages_all_two = Message.objects.filter(sender=receive, receiver=send)
   messages_all = messages_all_one.union(messages_all_two).order_by('date_sent')
-  # messages_all = list(messages_all_one) + list(messages_all_two)
   user = request.user.username
 
   context = {
@@ -235,6 +275,7 @@ def messagesPerson(request, *args, **kwargs):
     'form': form,
     'username_logged_in': user,
     'user_to_message': receive,
+    'color_message': color,
   }
 
   return render(request, 'blog/messages_person.html', context)

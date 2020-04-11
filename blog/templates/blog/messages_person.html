@@ -4,26 +4,112 @@
 
 <div class="color-palette">   
     
-    <div class="lavendar circle"> </div>
-    <div class="dark-pink circle"> </div>
-    <div class="red circle"> </div>
-    <div class="orange circle"> </div>
-    <div class="yellow circle"> </div>
-    <div class="green circle"> </div>
-    <div class="light-blue circle"> </div>
-    <div class="regular-blue circle"> 
-        <div class="check">
-            <i class="fas fa-check fa-2x"></i> 
-        </div>
-    </div>
-    <div class="purple circle"> </div>
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="lavendar">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="lavendar circle" type="submit" value="lavendar">
+        {% if color_message == "lavendar" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="dark-pink">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="dark-pink circle" type="submit" value="dark-pink">
+        {% if color_message == "dark-pink" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %} 
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="red">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="red circle" type="submit" value="red">
+        {% if color_message == "red" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="orange">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="orange circle" type="submit" value="orange">
+        {% if color_message == "orange" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="yellow">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="yellow circle" type="submit" value="yellow">
+        {% if color_message == "yellow" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="green">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="green circle" type="submit" value="green">
+        {% if color_message == "green" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="light-blue">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="light-blue circle" type="submit" value="light-blue">
+        {% if color_message == "light-blue" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="regular-blue">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="regular-blue circle" type="submit" value="regular-blue">
+        {% if color_message == "regular-blue" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %}
+        </button>
+    </form>
+
+    <form method="POST" action="/messages/">
+        {% csrf_token %}
+        <input type="hidden" name="color" value="purple">
+        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+        <button class="purple circle" type="submit" value="purple">
+        {% if color_message == "purple" %}
+            <i class="fas fa-check fa-2x"></i>
+        {% endif %} 
+        </button>
+    </form>
+
 
 </div>
 
 <div class="head">
     <img class="rounded-circle article-img" src="{{ user_to_message.profile.image.url }}" style="float:left;">
     <div style="float:left;">
-        <h3 style="margin-bottom:0px; margin-top: 4px;"> {{ username_logged_in }}</h3>
+        <h3 style="margin-bottom:0px; margin-top: 4px;"> {{ user_to_message.username }}</h3>
         <small> Previous Message History </small> 
     </div>    
 </div>
@@ -31,7 +117,7 @@
 <div class="all-messages">
     {% for m in messages_all %}
         {% if m.sender.username == username_logged_in %}
-            <p class="message-sent"> {{ m.message }} </p>
+            <p class="message-sent {{ m.color }}"> {{ m.message }} </p>
         {% else %}
             <p class="message-received"> {{ m.message }} </p>
         {% endif %}
