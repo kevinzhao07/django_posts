@@ -250,6 +250,11 @@ article {
   border: none;
 }
 
+.circle:active, .circle:focus {
+  outline: 0;
+  border: none;
+}
+
 .check {
   text-align: center;
   margin: auto 0;

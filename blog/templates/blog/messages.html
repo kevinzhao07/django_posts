@@ -12,14 +12,24 @@
             <img class="black-border adjust" src="{{ user.profile.image.url }}">
             <div class="summary">
                 <h2 class="name"> {{ user.username }}</h2>
+
+                <!-- we need a key-value to use to search into our dictionary to get the correct
+                value, so we used a templatetags directory and imported the .py file. this basically
+                defines a function/modifier that we can use in our template. the key is logged_in user +
+                other user.username. we use with to set it as a variable -->
+                
                 {% with ""|add:our_username|add:user.username as key %}
+                <!-- 'get_item' is our function that we defined in the templatetags -->
                 <small class="total"> Total Messages: {{ message_count|get_item:key }} </small> 
                 <p style="font-size: 18px; font-weight: 500"> 
+
+                    <!-- if no messages exist, display a different message  -->
                     {% if message_dictionary|get_item:key == None %}
-                    Say hi to your friend, {{ user.username }}!
+                        Say hi to your friend, {{ user.username }}!
                     {% else %}
-                    {{ message_dictionary|get_item:key }} </p>
+                        {{ message_dictionary|get_item:key }} </p>
                     {% endif %}
+                    
                 {% endwith %}
             </div>    
         </div>

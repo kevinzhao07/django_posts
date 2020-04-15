@@ -4,8 +4,7 @@ from .views import PostCreateView, PostUpdateView, PostDeleteView, UserPostListV
 # import views.py in order to use home function (for linking)
 from . import views
 
-# views.home returns HttpResponse that we are on "blog-home" page
-# always have trailing / when adding paths
+# second parameter is either a class based view or a view function (imported)
 urlpatterns = [
     path('', views.home, name='blog-home'),
     path('about/', views.about, name='blog-about'),

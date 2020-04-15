@@ -5,7 +5,8 @@
 
   {% for post in page_obj %}
 
-    {% if post.pin == True%}
+    <!-- pinned posts and regular posts will be displayed differently -->
+    {% if post.pin == True %}
     <article class="media content-section" style="background-color:#E9F4FD">
     {% else %}
     <article class="media content-section">
@@ -15,12 +16,15 @@
 
         <div class="article-metadata">
           <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+
+          <!-- pinned posts will have a small icon to indicate if they're pinned -->
           {% if post.pin == True %}
             <small class="text-muted">{{ post.date_posted }} <i class="fas fa-map-pin fa-lg"></i></small>
           {% else %}
             <small class="text-muted">{{ post.date_posted }}</small>
           {% endif %}
 
+          <!-- only the author of the post is able to pin/unpin the blog post -->
             {% if post.author == user %}
               {% if post.pin == True %}
                 <form method="POST">
@@ -39,6 +43,8 @@
             {% endif %}
 
           </div>
+
+          <!-- again, different stylings -->
           {% if post.pin == True %}
             <h2 class="article-title pinned" >{{ post.title }}</h2>
 
@@ -47,6 +53,8 @@
 
           {% endif %}
         <p class="article-content">{{ post.content }}</p>
+
+        <!-- only if user is logged in, can they see/access these buttons -->
 
         {% if user.is_authenticated %}
 
@@ -77,6 +85,8 @@
       </div>
     </article>
   {% endfor %}
+
+  <!-- outline for pagination -->
 
   {% if page_obj.has_previous %}
     <a class="btn btn-outline-info mb-4" href="?page=1">First</a>

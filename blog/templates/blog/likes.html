@@ -1,28 +1,32 @@
 {% extends "blog/base.html" %}
 {% block content %}
 <h1 class="mb-3"> {{ request.user.username }}'s Liked Posts </h1>
+
+    <!-- still separation of pinned/regular posts -->
     {% for like in likes %}
-    {% if like.post.pin == True %}
-        <article class="media content-section" style="background-color:#E9F4FD">
-    {% else %}
-        <article class="media content-section">
-    {% endif %}
-    <img class="rounded-circle article-img" src="{{ like.post.author.profile.image.url }}">
-    <div class="media-body">
-        <div class="article-metadata">
-        <a class="mr-2" href="{% url 'user-posts' like.post.author.username %}">{{ like.post.author }}</a>
-        <small class="text-muted">{{ like.post.date_posted }}</small>
-        </div>
         {% if like.post.pin == True %}
-            <h2 class="article-title pinned" >{{ like.post.title }}</h2>
+            <article class="media content-section" style="background-color:#E9F4FD">
         {% else %}
-            <h2 class="article-title">{{ like.post.title }}</h2>
-        {% endif %}        
-        <p class="article-content">{{ like.post.content }}</p>
-    </div>
-    </article>
+            <article class="media content-section">
+        {% endif %}
+
+        <img class="rounded-circle article-img" src="{{ like.post.author.profile.image.url }}">
+        <div class="media-body">
+            <div class="article-metadata">
+            <a class="mr-2" href="{% url 'user-posts' like.post.author.username %}">{{ like.post.author }}</a>
+            <small class="text-muted">{{ like.post.date_posted }}</small>
+            </div>
+            {% if like.post.pin == True %}
+                <h2 class="article-title pinned" >{{ like.post.title }}</h2>
+            {% else %}
+                <h2 class="article-title">{{ like.post.title }}</h2>
+            {% endif %}        
+            <p class="article-content">{{ like.post.content }}</p>
+        </div>
+        </article>
     {% endfor %}
 
+    <!-- have pagination still exists for user/liked posts as well -->
     {% if is_paginated %}
 
     {% if page_obj.has_previous %}

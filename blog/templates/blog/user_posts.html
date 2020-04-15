@@ -3,6 +3,7 @@
 <h1 class="mb-3"> Posts by {{ view.kwargs.username }} </h1>
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
+
   {% for post in posts %}
     <article class="media content-section">
       <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
@@ -17,6 +18,7 @@
     </article>
   {% endfor %}
 
+  <!-- pagination from ClassViews vs. own view functions -->
   {% if is_paginated %}
 
     {% if page_obj.has_previous %}
