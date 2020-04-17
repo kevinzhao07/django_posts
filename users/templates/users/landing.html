@@ -1,0 +1,65 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      
+      <!-- adding our own .css files from static -->
+      <link rel="stylesheet" type="text/css" href="{% static 'users/style/main.css' %}">
+
+      <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
+ 
+    </head>
+    <body>
+
+        <div id="background"> 
+
+          <div id="container"> 
+
+            <img src="{% static 'users/images/logo_final.png' %}" class="logo">
+
+            <div id="splash-container">
+              <p class="splash"> Better than Ohio State's! </p>
+              <!-- <p class="splash"> Keep Calm and Zoom On! </p> -->
+              <!-- <p class="splash">NP is not in P! Right?</p> -->
+              <!-- <p class="splash">3.14159265358979...</p> -->
+              <!-- <p class="splash"></p> -->
+            </div>
+
+            <div id="controls">
+
+              <a href="{% url 'blog-home' %}">
+                <button id="preview"> Preview Site </button> 
+              </a> <br/>
+
+              <a href="{% url 'blog-home' %}">
+                <button id="preview"> Login </button> 
+              </a> <br/>
+
+              <a href="{% url 'blog-home' %}">
+                <button id="preview"> Register </button> 
+              </a> <br/>
+
+              <a href="{% url 'blog-home' %}" style="margin-right: 20px;">
+                <button id="preview-short">About Me</button> 
+              </a>
+              
+              <a href="{% url 'blog-home' %}">
+                <button id="preview-short">How To Use</button> 
+              </a>
+
+            </div>
+
+          </div>
+          <p class="signoff"> Kevin Zhao v.0.1 </p>
+        </div>
+
+        
+            
+    
+    </body>
+  </html>

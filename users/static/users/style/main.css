@@ -1,0 +1,135 @@
+@font-face {
+    font-family: 'vanilla';
+    src: local('vanilla'), url('/static/users/fonts/font.otf') format("opentype");
+  }
+
+* {
+    font-family: 'vanilla';
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+}
+
+body {
+    min-height: 100%;
+}
+
+body, html {
+    height: 100%;
+}
+
+#background {
+    height: 100% !important;
+    width: 100%;
+    background-image: url('/static/users/images/background4.jpg');
+    background-repeat: repeat;
+    background-position: left center;
+    background-size: cover;
+    animation: scroll 1500s linear infinite;
+}
+
+@keyframes scroll {
+    100%{
+        background-position: -100000px 0px;
+    }
+}
+
+#container {
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: blur(0px) !important;
+    z-index: 2;
+}
+
+p.splash {
+    height: 80px;
+    font-size: 3.65em;
+    color: #fff200;
+    background: transparent !important;
+
+    text-shadow: 6px 6px #5d5e00;
+    animation: grow .5s infinite;
+}
+
+@keyframes grow {
+    0% {
+        transform: scale(1);
+    }
+    20% {
+        transform: scale(.97);
+    }
+    40% {
+        transform: scale(.95);
+    }
+    50% {
+        transform: scale(.94);
+    }
+    60% {
+        transform: scale(.95);
+    }
+    80% {
+        transform: scale(.97);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+img.logo {
+    width: 88%;
+    margin-top: 7%;
+}
+
+#splash-container {
+    transform: rotate(-12deg);
+    width: 45%;
+    background: transparent !important;
+    float: right;
+    margin-top: -120px;
+}
+
+#controls {
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 80px;
+}
+
+#preview, #preview-short {
+    background-color: grey;
+    font-size: 2.4em;
+    width: 40%;
+    padding: 9px 0px;
+    border-top: 3px solid #c7c7c7;
+    border-left: 3px solid #c7c7c7;
+    border-right: 3px solid #e3e3e3;
+    border-bottom: 3px solid #e3e3e3;
+    outline: 4px solid black;
+    margin-bottom: 25px;
+    text-shadow: 4px 4px #4d4d4d;    
+    color: #fbfce6;
+    cursor: pointer;
+}
+
+#preview-short {
+    width: 19.3% !important;
+}
+
+#preview:hover, #preview-short:hover {
+   color: #ffd770;
+   background-color: #737373;
+}
+
+a, a:visited {
+   text-decoration: none;
+}
+
+.signoff {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    font-size: 2.5em;
+    text-shadow: 2.5px 2.5px #c9c9c9;    
+    color: #404040;
+}

@@ -25,7 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # /blog will map to blog.urls(.py), and there we have path that maps
     # onto views.(py)home(func)
-    path('', include('blog.urls')),
+    path('', users_views.home, name="home"),
+    path('blog/', include('blog.urls')),
     path('register/', users_views.register, name="register"),
     path('profile/', users_views.profile, name="profile"),
     path('login/', auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),

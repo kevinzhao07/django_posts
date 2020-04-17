@@ -39,3 +39,7 @@ def profile(request):
   }
   return render(request, 'users/profile.html', context)
 
+def home(request):
+
+  return render(request, 'users/landing.html')
+
