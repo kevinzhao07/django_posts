@@ -44,15 +44,19 @@ def home(request):
       list_likes.extend([liked_posts.post.pk])
 
   # still allows for page to be paginated despite not being in class-based view
-  paginator = Paginator(post_all, 5)
+  paginator = Paginator(post_all, 10)
   page_number = request.GET.get('page')
   page_obj = paginator.get_page(page_number)
+
+  # pass in all likes
+  likes = Like.objects.all()
 
   # context includes now all posts (in pinned/unpinned order), array of all posts liked, and page #
   context = {
     'posts': post_all,
     'likes_list': list_likes,
     'page_obj': page_obj,
+    'likes': likes,
   }
 
   # if form has been submitted -- all "forms" are in the form of submit buttons with hidden input lines
@@ -108,14 +112,14 @@ def home(request):
       messages.success(request, f'''You unliked {post_unlike.author.username}'s post, "{post_unlike.title}"''')
       return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-  return render(request, 'blog/home.html', context)
+  return render(request, 'blog/home2.html', context)
 
 # same as home view with less functionality, but in a Class based view
 class UserPostListView(ListView):
   model = Post
   template_name = 'blog/user_posts.html'
   context_object_name = 'posts'
-  paginate_by = 5
+  paginate_by = 10
 
   def get_queryset(self):
     user = get_object_or_404(User, username=self.kwargs.get('username'))

@@ -12,6 +12,7 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <!-- adding our own .css files from static -->
       <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+      <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
       <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
 
@@ -59,7 +60,7 @@
       <!-- new bootstrap css for content -->
       <main role="main" class="container">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-12">
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'error' %}
