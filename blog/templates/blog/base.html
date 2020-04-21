@@ -20,8 +20,22 @@
 </head>
 
 <body>
+  
 
   <main role="main" class="container">
+    <div class="row">
+      <a href="{% url 'home' %}">
+        <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
+      </a>
+      <div id="nav-bar">
+        <a class="item" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a class="item" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
+        <a class="item" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
+        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
+        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
+        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+      </div>
+    </div>
 
     <div class="row">
 

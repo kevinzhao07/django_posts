@@ -8,6 +8,7 @@
     padding: 0px;
     margin: 0px;
     text-align: center;
+    user-select: none !important;
 }
 
 body {
@@ -98,7 +99,7 @@ img.logo {
 
 #preview, #preview-short, #short {
     background-color: grey;
-    background-image: url('/static/users/images/loading.png');
+    background-image: url('/static/users/images/post-background.png');
     background-size: cover;
     font-size: 2.4em;
     width: 40%;
@@ -127,7 +128,7 @@ img.logo {
 
 #preview:hover, #preview-short:hover {
    color: #ffd770;
-   background-image: url('/static/users/images/loading-highlighted.png');
+   background-image: url('/static/users/images/post-pinned.png');
    background-size: cover;
 }
 

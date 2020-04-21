@@ -44,7 +44,7 @@ def home(request):
       list_likes.extend([liked_posts.post.pk])
 
   # still allows for page to be paginated despite not being in class-based view
-  paginator = Paginator(post_all, 10)
+  paginator = Paginator(post_all, 3)
   page_number = request.GET.get('page')
   page_obj = paginator.get_page(page_number)
 

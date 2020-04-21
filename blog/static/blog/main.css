@@ -5,6 +5,7 @@
 
 * {
   font-family: "vanilla";
+  user-select: none !important;
 }
 
 p {
@@ -25,7 +26,6 @@ p {
   color: #333333;
 }
 
-/* TODO */
 .pinned {
   color: #ffcd57 !important;
 }
@@ -309,7 +309,6 @@ body::-webkit-scrollbar {
   display: none;
 }
 
-
 #post-head {
   overflow: hidden;
 }
@@ -331,7 +330,6 @@ body::-webkit-scrollbar {
   100% {
     text-shadow: 0 0 1px #fbfce6, 0 0 1px #fbfce6, 0 0 1px #fbfce6, 0 0 1px #fbfce6, 0 0 2px #fbfce6, 0 0 2px #fbfce6, 0 0 2px #fbfce6;
   }
-  
 }
 
 button.like {
@@ -492,7 +490,7 @@ img.detail {
 
 #comment-header {
   overflow: hidden;
-  margin-top: 8px;
+  margin-top: 3px;
 }
 
 .comment-user {
@@ -519,10 +517,51 @@ img.detail {
   color: #e8e8ff;
   text-shadow: 4px 4px #4d4d4d;
   font-size: 1.4em;
-  line-height: 1.3em !important;
-  margin-top: 5px;
+  line-height: 1.15em !important;
+  margin-top: 18px;
 }
 
 .pinned-color {
   color: #ffdbdb !important;
 }
+
+.header-logo {
+  width: 100%;
+}
+
+.row {
+  margin-top: 25px;
+}
+
+#header {
+  margin-top: 20px;
+  margin-bottom: 100px;
+  position: fixed;
+  width: 100%;
+}
+
+#nav-bar {
+  margin: 25px auto 0px auto;
+  max-width: 100%;
+}
+
+.item {
+  font-size: 1.75em;
+  color: #FFCB05 !important;
+  padding: 8px 10px;
+  background-image: url('/static/users/images/post-background.png');
+  border-top: 3px solid #c7c7c7;
+  border-left: 3px solid #c7c7c7;
+  border-right: 3px solid #525252;
+  border-bottom: 3px solid #525252;
+  outline: 2px solid black;
+  margin-right: 10px;
+}
+
+.item:hover {
+  text-decoration: none;
+  color: #fbfce6 !important;
+  outline: 2px solid white;
+  background-image: url('/static/users/images/post-pinned.png');
+}
+
