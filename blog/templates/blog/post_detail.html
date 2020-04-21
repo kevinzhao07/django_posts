@@ -1,53 +1,90 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<!-- we looped through each object in posts (we named them post)
-      and was able to access each member variable inside each object -->
-  <article class="media content-section">
-    <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-    <div class="media-body">
-      
-      <div class="article-metadata">
-        <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-        <small class="text-muted">{{ post.date_posted }}</small>
-      </div>
-      <h2 class="article-title">{{ post.title }}</h2>
-      <p class="article-content">{{ post.content }}</p>
 
-      <!-- always show "Liked By:" 
-      // TODO: maybe we can make it not show if there are no likes -->
-      <p>Liked by:
+{% if post.pin == True %}
+  <div id="post" class="post-pinned">
+
+  {% else %}
+  <div id="post">
+
+  {% endif %}
+
+    <div id="post-head">
+
+      <img src="{{ post.author.profile.image.url }}" class="post-image" />
+
+      <div id="heading">
+        <a href="{% url 'user-posts' post.author.username %}" class="hover">
+          <p class="post-name"> {{ post.author.username }} </p>
+        </a>
+        <small class="text-muted date"> {{ post.date_posted }}</small>
+      </div>
+      {% if post.pin == True %}
+      <p class="post-title pinned" >{{ post.title }}</p>
+
+      {% else %}
+      <p class="post-title">{{ post.title }}</p>
+
+      {% endif %}
+
+    </div>
+
+    {% if post.pin == True %}
+    <div id="post-content-full" class="post-pinned pinned-color">
+
+    {% else %}
+    <div id="post-content-full">
+
+    {% endif %}
+    {{ post.content|linebreaks }} 
+    </div>
+
+    <div id="post-footer">
+      <p class="liked-by"> Liked By </p>
+
+      <div id="detail-likes">
         {% for like in likes %}
-          <a class="mb-2" href="{% url 'user-posts' like.user.username %}">{{ like.user.username }},</a>
+          <img src="{{ like.user.profile.image.url }}" class="like-photos detail" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked your post!">
         {% endfor %}
-      </p>
+      </div>
 
       <!-- display all coments for each post -->
       {% for comment in comments %}
-      <article class="media content-section pt-3 mb-2" style="background-color:#f2f2f2;">
-          <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
-          <div class="media-body">
-
-            <div class="article-metadata">
-              <a class="mr-2" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
-              <small class="text-muted">{{ comment.date_posted }}</small>
-            </div>
-            <p> {{ comment.content }} </p>
+        {% if post.pin == True %}
+        <div id="comment" class="invert">
+        {% else %}
+        <div id="comment">
+        {% endif %}
+          <img class="comment-image" src="{{ comment.author.profile.image.url }}">
+          <div id="comment-header">
+            <a class="comment-user" href="{% url 'user-posts' comment.author.username %}">{{ comment.author }}</a>
+            <small class="text-muted comment-date">{{ comment.date_posted }}</small>            
           </div>
-      </article>
+          {% if post.pin == False %}
+          <p class="comment-content pinned-color">
+
+          {% else %}
+          <p class="comment-content">
+          {% endif %}
+          
+          {{ comment.content }} </p>
+        </div>
       {% endfor %}
       
-      <form method="POST">
-        {% csrf_token %}
-        <legend class="border-bottom mt-4 mb-2">Have a Thought? Write a Comment!</legend>
-        <fieldset class="form-group">
-          {{ form|crispy }}
-        </fieldset>
-        <div class="form-group">
-          <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: -10px;" type="submit"> Comment! </button>
-        </div> 
-      </form>
-
+      <div id="comment-form">
+        <form method="POST">
+          {% csrf_token %}
+          <legend class="border-bottom mt-4 mb-2">Have a Thought? Write a Comment!</legend>
+          <fieldset class="form-group">
+            {{ form|crispy }}
+          </fieldset>
+          <div class="form-group">
+            <button class="btn btn-info"style="float:right; margin-bottom: 10px; margin-top: -10px;" type="submit"> Comment! </button>
+          </div> 
+        </form>
+      </div>
     </div>
-  </article>
-{% endblock content %}
+  </div>
+
+  {% endblock content %}

@@ -1,169 +1,112 @@
-<!-- makes it so we can load static files from directory-->
+{% extends "blog/base.html" %}
 {% load static %}
-<!-- PUT ALL HTML THAT YOU WANT IN THIS PAGE FOR HOME.HTML-->
-<!DOCTYPE html>
-<html>
+{% block content %}
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <!-- adding our own .css files from static -->
-  <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
-  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  {% for post in page_obj %}
 
-  <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
-</head>
+  {% if post.pin == True %}
+  <div id="post" class="post-pinned">
 
-<body>
+  {% else %}
+  <div id="post">
 
-  <main role="main" class="container">
+  {% endif %}
 
-    <div class="row">
+    <div id="post-head">
 
-      <div class="col-md-2">
+      <img src="{{ post.author.profile.image.url }}" class="post-image" />
 
+      <div id="heading">
+        <a href="{% url 'user-posts' post.author.username %}" class="hover">
+          <p class="post-name"> {{ post.author.username }} </p>
+        </a>
+        <small class="text-muted date"> {{ post.date_posted }}</small>
       </div>
+      {% if post.pin == True %}
+      <p class="post-title pinned" >{{ post.title }}</p>
 
-      <div class="col-md-8">
+      {% else %}
+      <p class="post-title">{{ post.title }}</p>
 
-        {% if messages %}
-        {% for message in messages %}
+      {% endif %}
 
-        {% if message.tags == 'error' %}
-        <div class="alert alert-danger"> {{ message }} </div>
-        {% else %}
-        <div class="alert alert-{{ message.tags }}"> {{ message }} </div>
-        {% endif %}
-
-        {% endfor %}
-        {% endif %}
-
-        {% for post in page_obj %}
-
+      {% if post.author == user %}
         {% if post.pin == True %}
-        <div id="post" class="post-pinned">
+          <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="unpinned" value="{{ post.pk }}">
+            <button class="pin" type="submit" value="{{ post.pk }}"> <i class="fas fa-bookmark"></i> </button>
+          </form>
 
         {% else %}
-        <div id="post">
-
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="pinned" value="{{ post.pk }}">
+          <button class="pin" type="submit" value="{{ post.pk }}"> <i class="far fa-bookmark"></i> </button>
+        </form>
         {% endif %}
-
-          <div id="post-head">
-
-            <img src="{{ post.author.profile.image.url }}" class="post-image" />
-
-            <div id="heading">
-              <a href="{% url 'user-posts' post.author.username %}" class="hover">
-                <p class="post-name"> {{ post.author.username }} </p>
-              </a>
-              <small class="text-muted date"> {{ post.date_posted }}</small>
-            </div>
-            {% if post.pin == True %}
-            <p class="post-title pinned" >{{ post.title }}</p>
-
-            {% else %}
-            <p class="post-title">{{ post.title }}</p>
-
-            {% endif %}
-
-            {% if post.author == user %}
-              {% if post.pin == True %}
-                <form method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="unpinned" value="{{ post.pk }}">
-                  <button class="pin" type="submit" value="{{ post.pk }}"> <i class="fas fa-bookmark"></i> </button>
-                </form>
-
-              {% else %}
-              <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="pinned" value="{{ post.pk }}">
-                <button class="pin" type="submit" value="{{ post.pk }}"> <i class="far fa-bookmark"></i> </button>
-              </form>
-              {% endif %}
-            {% endif %}
-
-          </div>
-
-          <div id="post-content">
-            {{ post.content|linebreaks }} 
-            <div id="elipsis">
-              <a href="{% url 'post-detail' post.id %}"><i class="fas fa-ellipsis-h"></i></a>
-            </div>
-          </div>
-
-          <div id="post-footer">
-
-            <div id="like-button">
-
-              {% if user.is_authenticated %}
-
-                {% if post.pk in likes_list %}
-                <form method="POST" style="float:left">
-                  {% csrf_token %}
-                  <input type="hidden" name="unlike" value="{{ post.pk }}">
-                  <button class="like" type="submit" value="{{ post.pk }}"> <i class="fas fa-thumbs-up"></i> UNLIKE  </button>
-                </form>
-
-                {% else %}
-                <form method="POST" style="float:left">
-                  {% csrf_token %}
-                  <input type="hidden" name="like" value="{{ post.pk }}">
-                  <button class="like" type="submit" value="{{ post.pk }}"> <i class="far fa-thumbs-up"></i> LIKE  </button>
-                </form>
-                {% endif %}
-
-              {% endif %}
-
-            </div>
-
-            <div id="like-images">
-              
-              {% for like in likes %}
-
-                <!-- is there a better solution than this? O(nm) -->
-                {% if post == like.post %}
-                  <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked your post!">
-                {% endif %}
-
-              {% endfor %}
-              
-            </div>
-
-          </div>
-            
-
-
-        </div>
-        {% endfor %}
-
-      </div>
-
-      <div class="col-md-2">
-
-      </div>
+      {% endif %}
 
     </div>
 
-  </main>
+    {% if post.pin == True %}
+    <div id="post-content" class="pinned-color">
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    {% else %}
+    <div id="post-content">
 
-</body>
+    {% endif %}
 
-</html>
+      {{ post.content|linebreaks }} 
+      <div id="elipsis">
+        <a href="{% url 'post-detail' post.id %}"><i class="fas fa-ellipsis-h"></i></a>
+      </div>
+    </div>
+
+    <div id="post-footer">
+
+      <div id="like-button">
+
+        {% if user.is_authenticated %}
+
+          {% if post.pk in likes_list %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="unlike" value="{{ post.pk }}">
+            <button class="like" type="submit" value="{{ post.pk }}"> <i class="fas fa-thumbs-up"></i> UNLIKE  </button>
+          </form>
+
+          {% else %}
+          <form method="POST" style="float:left">
+            {% csrf_token %}
+            <input type="hidden" name="like" value="{{ post.pk }}">
+            <button class="like" type="submit" value="{{ post.pk }}"> <i class="far fa-thumbs-up"></i> LIKE  </button>
+          </form>
+          {% endif %}
+
+        {% endif %}
+
+      </div>
+
+      <div id="like-images">
+        
+        {% for like in likes %}
+
+          <!-- is there a better solution than this? O(nm) -->
+          {% if post == like.post %}
+            <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked your post!">
+          {% endif %}
+
+        {% endfor %}
+        
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}
