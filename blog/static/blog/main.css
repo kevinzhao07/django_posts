@@ -589,6 +589,7 @@ img.detail {
 
 #comment-form {
   clear: both;
+  margin-top: 15px;
 }
 
 .comment-image {
@@ -718,4 +719,9 @@ a.forgot-pass:hover {
 
 .float-right {
   float: right;
+}
+
+form.fixing-alignment {
+  margin-top: 15px !important; 
+  overflow: hidden;
 }
