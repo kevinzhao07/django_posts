@@ -1,138 +1,219 @@
-{% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
-{% block content %}
 
-<!-- simple way of listing out all available colors (loop?) -->
-<div class="color-palette">   
-    
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="lavendar">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="lavendar circle" type="submit" value="lavendar">
-        {% if color_message == "lavendar" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
+<!-- makes it so we can load static files from directory-->
+{% load static %}
+<!-- PUT ALL HTML THAT YOU WANT IN THIS PAGE FOR HOME.HTML-->
+<!DOCTYPE html>
+<html>
 
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="dark-pink">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="dark-pink circle" type="submit" value="dark-pink">
-        {% if color_message == "dark-pink" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %} 
-        </button>
-    </form>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="red">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="red circle" type="submit" value="red">
-        {% if color_message == "red" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- adding our own .css files from static -->
+  <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link rel="shortcut icon" href="{% static 'users/images/favicon.ico' %}"/>
+  <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
+</head>
 
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="orange">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="orange circle" type="submit" value="orange">
-        {% if color_message == "orange" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
+<body>
+  
 
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="yellow">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="yellow circle" type="submit" value="yellow">
-        {% if color_message == "yellow" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
-
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="green">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="green circle" type="submit" value="green">
-        {% if color_message == "green" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
-
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="light-blue">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="light-blue circle" type="submit" value="light-blue">
-        {% if color_message == "light-blue" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
-
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="regular-blue">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="regular-blue circle" type="submit" value="regular-blue">
-        {% if color_message == "regular-blue" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %}
-        </button>
-    </form>
-
-    <form method="POST" action="/blog/messages/">
-        {% csrf_token %}
-        <input type="hidden" name="color" value="purple">
-        <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
-        <button class="purple circle" type="submit" value="purple">
-        {% if color_message == "purple" %}
-            <i class="fas fa-check fa-2x"></i>
-        {% endif %} 
-        </button>
-    </form>
-
-
-</div>
-
-<div class="head">
-    <img class="rounded-circle article-img" src="{{ user_to_message.profile.image.url }}" style="float:left;">
-    <div style="float:left;">
-        <h3 style="margin-bottom:0px; margin-top: 4px;"> {{ user_to_message.username }}</h3>
-        <small> Previous Message History </small> 
-    </div>    
-</div>
-
-<div class="all-messages">
-    {% for m in messages_all %}
-        {% if m.sender.username == username_logged_in %}
-            <p class="message-sent {{ m.color }}"> {{ m.message }} </p>
+  <main role="main" class="container">
+    <div class="row">
+      <a href="{% url 'home' %}">
+        <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
+      </a>
+      <div id="nav-bar">
+        <a class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
+        {% if user.is_authenticated == False %}
+          <a class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
+          <a class="item float-right" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
         {% else %}
-            <p class="message-received"> {{ m.message }} </p>
+          <a class="item float-right" href="{% url 'logout' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+          <a class="item float-right" href="{% url 'profile' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+          <a class="item float-right" href="{% url 'post-create' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
         {% endif %}
-    {% endfor %}
-</div>
 
-<div class="message">
-    <form method="POST">
-        {% csrf_token %}
-        <div class="message-form"> {{ form|crispy }} </div>
-        <div class="form-group">
-        <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: 0px;" type="submit"> <i class="fas fa-paper-plane"></i> Send </button>
-        </div> 
-    </form>
-</div>
-    
-{% endblock %}
+      </div>
+    </div>
+
+    <div class="row" style="width:100%">
+
+      <div class="col-md-11 no-pad">
+
+      {% if messages %}
+        {% for message in messages %}
+
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger"> {{ message }} </div>
+        {% else %}
+        <div class="alert alert-{{ message.tags }}"> {{ message }} </div>
+        {% endif %}
+
+        {% endfor %}
+      {% endif %}      
+
+      <div class="head">
+        <img class="post-image" src="{{ user_to_message.profile.image.url }}" style="float:left;">
+        <div style="float:left;">
+          <a class="message-name" href="{% url 'user-posts' user_to_message.username %}"><p class="message-name larger"> {{ user_to_message.username }}</p></a>
+          <small class="text-muted date previous-message"> Previous Message History </small> 
+
+        </div>    
+      </div>
+
+      <div class="all-messages">
+          {% for m in messages_all %}
+              {% if m.sender.username == username_logged_in %}
+                  <p class="message-sent {{ m.color }}"> {{ m.message }} </p>
+              {% else %}
+                  <p class="message-received"> {{ m.message }} </p>
+              {% endif %}
+          {% endfor %}
+      </div>
+
+      <div class="message">
+          <form method="POST">
+              {% csrf_token %}
+              <div class="message-form"> {{ form|crispy }} </div>
+              <div class="form-group">
+              <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: 0px;" type="submit"> <i class="fas fa-paper-plane"></i> Send </button>
+              </div> 
+          </form>
+      </div>
+
+    </div>
+
+    <div class="col-md-1 no-pad colors">
+      <!-- simple way of listing out all available colors (loop?) -->
+      <div class="color-palette">   
+            
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="lavendar">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="lavendar circle white" type="submit" value="lavendar">
+          {% if color_message == "lavendar" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="dark-pink">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="dark-pink circle white" type="submit" value="dark-pink">
+          {% if color_message == "dark-pink" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %} 
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="red">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="red circle white" type="submit" value="red">
+          {% if color_message == "red" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="orange">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="orange circle white" type="submit" value="orange">
+          {% if color_message == "orange" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="yellow">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="yellow circle white" type="submit" value="yellow">
+          {% if color_message == "yellow" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="green">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="green circle white" type="submit" value="green">
+          {% if color_message == "green" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="light-blue">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="light-blue circle white" type="submit" value="light-blue">
+          {% if color_message == "light-blue" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="regular-blue">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="regular-blue circle white" type="submit" value="regular-blue">
+          {% if color_message == "regular-blue" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %}
+          </button>
+        </form>
+
+        <form method="POST" action="/blog/messages/">
+          {% csrf_token %}
+          <input type="hidden" name="color" value="purple">
+          <input type="hidden" name="receiver" value="{{ user_to_message.username }}">
+          <button class="purple circle white" type="submit" value="purple">
+          {% if color_message == "purple" %}
+              <i class="fas fa-check fa-2x"></i>
+          {% endif %} 
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+
+    </div>
+
+  </main>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

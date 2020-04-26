@@ -43,11 +43,6 @@ def home(request):
     for liked_posts in likes:
       list_likes.extend([liked_posts.post.pk])
 
-  # still allows for page to be paginated despite not being in class-based view
-  paginator = Paginator(post_all, 3)
-  page_number = request.GET.get('page')
-  page_obj = paginator.get_page(page_number)
-
   # pass in all likes
   likes = Like.objects.all()
 
@@ -55,7 +50,6 @@ def home(request):
   context = {
     'posts': post_all,
     'likes_list': list_likes,
-    'page_obj': page_obj,
     'likes': likes,
   }
 

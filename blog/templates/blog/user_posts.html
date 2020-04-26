@@ -1,45 +1,73 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<h1 class="mb-3"> Posts by {{ view.kwargs.username }} </h1>
+<h1 class="mb-3 user-posts"> Posts by {{ view.kwargs.username }} </h1>
 <!-- we looped through each object in posts (we named them post)
       and was able to access each member variable inside each object -->
 
-  {% for post in posts %}
-    <article class="media content-section">
-      <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
-      <div class="media-body">
-        <div class="article-metadata">
-          <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
-          <small class="text-muted">{{ post.date_posted }}</small>
-        </div>
-        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-        <p class="article-content">{{ post.content }}</p>
-      </div>
-    </article>
-  {% endfor %}
+      {% for post in posts %}
 
-  <!-- pagination from ClassViews vs. own view functions -->
-  {% if is_paginated %}
-
-    {% if page_obj.has_previous %}
-      <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-
-    {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-        <a class="btn btn-info mb-4 c-w">{{ num }}</a>
-
-      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% if post.pin == True %}
+      <div id="post" class="post-pinned">
+    
+      {% else %}
+      <div id="post">
+    
       {% endif %}
-    {% endfor %}
-
-    {% if page_obj.has_next %}
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
-      <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-    {% endif %}
-
-  {% endif %}
+    
+        <div id="post-head">
+    
+          <img src="{{ post.author.profile.image.url }}" class="post-image" />
+    
+          <div id="heading">
+            <a href="{% url 'user-posts' post.author.username %}" class="hover">
+              <p class="post-name"> {{ post.author.username }} </p>
+            </a>
+            <small class="text-muted date"> {{ post.date_posted }}</small>
+          </div>
+          {% if post.pin == True %}
+          <p class="post-title pinned" >{{ post.title }}</p>
+    
+          {% else %}
+          <p class="post-title">{{ post.title }}</p>
+    
+          {% endif %}
+    
+          {% if post.author == user %}
+            {% if post.pin == True %}
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="unpinned" value="{{ post.pk }}">
+                <button class="pin" type="submit" value="{{ post.pk }}"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>
+              </form>
+    
+            {% else %}
+            <form method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="pinned" value="{{ post.pk }}">
+              <button class="pin" type="submit" value="{{ post.pk }}"> <span style="color:#ffe78f;"><i class="far fa-bookmark"></i></span> </button>
+            </form>
+            {% endif %}
+          {% endif %}
+    
+        </div>
+    
+        {% if post.pin == True %}
+        <div id="post-content" class="pinned-color no-border">
+    
+        {% else %}
+        <div id="post-content" class="no-border">
+    
+        {% endif %}
+    
+          {{ post.content|linebreaks }} 
+          <div id="elipsis-user">
+            <a href="{% url 'post-detail' post.id %}"><i class="fas fa-ellipsis-h"></i></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    
+    </div>
+    
 
 {% endblock content %}

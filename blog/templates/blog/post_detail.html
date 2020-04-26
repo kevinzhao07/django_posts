@@ -28,6 +28,10 @@
 
       {% endif %}
 
+      {% if post.author == user %}
+        <a class="edit-post" href="{% url 'post-update' post.id %}" style="float:right"> <i class="fas fa-edit pad-top"></i></a>   
+      {% endif %}
+
     </div>
 
     {% if post.pin == True %}

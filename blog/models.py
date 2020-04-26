@@ -23,7 +23,7 @@ class Comment(models.Model):
   post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
   def __str__(self):
-    return self.post.title
+    return self.content
 
 class Like(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -42,7 +42,7 @@ class Message(models.Model):
   color = models.CharField(max_length=20, default="regular-blue")
 
   def __str__(self):
-    return f'{self.sender.username} sent {self.receiver.username} a message'
+    return f'{self.sender.username} sent {self.receiver.username} "{self.message}"'
 
 class Todo(models.Model):
   completed = models.BooleanField(default=False)

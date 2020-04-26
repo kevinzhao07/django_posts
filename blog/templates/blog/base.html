@@ -17,6 +17,7 @@
   <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
   <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
+  <link rel="shortcut icon" href="{% static 'users/images/favicon.ico' %}"/>
 </head>
 
 <body>
@@ -28,12 +29,17 @@
         <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
       </a>
       <div id="nav-bar">
-        <a class="item" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
-        <a class="item" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
-        <a class="item" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
-        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
-        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
-        <a class="item" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+        <a class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
+        {% if user.is_authenticated == False %}
+          <a class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
+          <a class="item float-right" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
+        {% else %}
+          <a class="item float-right" href="{% url 'logout' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+          <a class="item float-right" href="{% url 'profile' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+          <a class="item float-right" href="{% url 'post-create' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
+        {% endif %}
+
       </div>
     </div>
 
