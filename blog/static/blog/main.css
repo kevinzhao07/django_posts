@@ -103,7 +103,7 @@ p.message-name {
   background-color: #e8e8e8;
   max-width: 650px;
   float: left;
-  border-radius: 50px;
+  border-radius: 20px;
   clear: both;
   color: #545454;
   margin-bottom: 5px;
@@ -331,12 +331,17 @@ a:hover {
 }
 
 body {
-  background-image: url('/static/users/images/wolverine.png');
-  background-size: cover;
+  background-image: url('/static/users/images/background.png');
+  background-size: fill;
   background-position: top center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   line-height: 2em !important;
-  background-attachment: fixed;
+}
+
+img.fixed {
+  position: fixed;
+  bottom: 20px;
+  left: 40px;
 }
 
 small.date {
