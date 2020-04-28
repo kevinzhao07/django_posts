@@ -33,6 +33,11 @@ def home(request):
 
   post_all = post_all_pinned + post_all_unpinned
 
+  # stats count
+  posts_by_me = Post.objects.filter(author=request.user)
+  comments_by_me = Comment.objects.filter(author=request.user)
+  likes_by_me = Like.objects.filter(user=request.user)
+
   # populate list_likes with post.pk of posts that have been liked by the user that is logged in
   list_likes = []
 
@@ -46,11 +51,40 @@ def home(request):
   # pass in all likes
   likes = Like.objects.all()
 
+  # 10, 5, 1
+  post_count = posts_by_me.count()
+  post_count_10 = post_count // 10
+  post_count_5 = (post_count - (post_count_10 * 10)) // 5
+  post_count_1 = (post_count - (post_count_10 * 10) - (post_count_5 * 5))
+
+  comment_count = comments_by_me.count()
+  comment_count_10 = comment_count // 10
+  comment_count_5 = (comment_count - (comment_count_10 * 10)) // 5
+  comment_count_1 = (comment_count - (comment_count_10 * 10) - (comment_count_5 * 5))
+
+  like_count = likes_by_me.count()
+  like_count_10 = like_count // 10
+  like_count_5 = (like_count - (like_count_10 * 10)) // 5
+  like_count_1 = (like_count - (like_count_10 * 10) - (like_count_5 * 5))
+
   # context includes now all posts (in pinned/unpinned order), array of all posts liked, and page #
   context = {
     'posts': post_all,
     'likes_list': list_likes,
     'likes': likes,
+    'posts_by_me': post_count,
+    'number_by_me_10': [0] * int(post_count_10),
+    'number_by_me_5': [0] * int(post_count_5),
+    'number_by_me_1': [0] * int(post_count_1),
+    'comments_by_me': comment_count,
+    'comment_by_me_10': [0] * int(comment_count_10),
+    'comment_by_me_5': [0] * int(comment_count_5),
+    'comment_by_me_1': [0] * int(comment_count_1),
+    'likes_by_me': like_count,
+    'like_by_me_10': [0] * int(like_count_10),
+    'like_by_me_5': [0] * int(like_count_5),
+    'like_by_me_1': [0] * int(like_count_1),
+
   }
 
   # if form has been submitted -- all "forms" are in the form of submit buttons with hidden input lines
@@ -288,10 +322,16 @@ def messagesPerson(request, *args, **kwargs):
   def form_valid(form, request):
     receive = get_object_or_404(User, username=kwargs['username'])
     send = request.user
+    messages_all_one = Message.objects.filter(sender=send, receiver=receive)
+    if len(messages_all_one) == 0:
+      color = 'regular-blue'
+    else:
+      color = messages_all_one[0].color
     messageForm = form.save(commit = False)
     messageForm.date_posted = timezone.now()
     messageForm.sender = send
     messageForm.receiver = receive
+    messageForm.color = color
     messageForm.save()
     return redirect('messages-person', username=kwargs['username'])
 

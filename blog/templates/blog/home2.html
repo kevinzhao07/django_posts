@@ -1,114 +1,263 @@
-{% extends "blog/base.html" %}
+<!-- makes it so we can load static files from directory-->
 {% load static %}
-{% block content %}
+<!-- PUT ALL HTML THAT YOU WANT IN THIS PAGE FOR HOME.HTML-->
+<!DOCTYPE html>
+<html>
 
-{% for post in posts %}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  {% if post.pin == True %}
-  <div id="post" class="post-pinned">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- adding our own .css files from static -->
+  <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
+  <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 
-  {% else %}
-  <div id="post">
+  <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
+  <link rel="shortcut icon" href="{% static 'users/images/favicon.ico' %}"/>
+</head>
 
-  {% endif %}
+<body>
+  <img src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
 
-    <div id="post-head">
-
-      <img src="{{ post.author.profile.image.url }}" class="post-image" />
-
-      <div id="heading">
-        <a href="{% url 'user-posts' post.author.username %}" class="hover">
-          <p class="post-name"> {{ post.author.username }} </p>
-        </a>
-        <small class="text-muted date"> {{ post.date_posted }}</small>
-      </div>
-      {% if post.pin == True %}
-      <p class="post-title pinned" >{{ post.title }}</p>
-
-      {% else %}
-      <p class="post-title">{{ post.title }}</p>
-
-      {% endif %}
-
-      {% if post.author == user %}
-        {% if post.pin == True %}
-          <form method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="unpinned" value="{{ post.pk }}">
-            <button class="pin" type="submit" value="{{ post.pk }}"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>
-          </form>
-
+  <main role="main" class="container">
+    <div class="row">
+      <a href="{% url 'home' %}">
+        <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
+      </a>
+      <div id="nav-bar">
+        <a class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
+        {% if user.is_authenticated == False %}
+          <a class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
+          <a class="item float-right" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
         {% else %}
-        <form method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="pinned" value="{{ post.pk }}">
-          <button class="pin" type="submit" value="{{ post.pk }}"> <span style="color:#ffe78f;"><i class="far fa-bookmark"></i></span> </button>
-        </form>
+          <a class="item float-right" href="{% url 'logout' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+          <a class="item float-right" href="{% url 'profile' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+          <a class="item float-right" href="{% url 'post-create' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
         {% endif %}
-      {% endif %}
 
+      </div>
     </div>
 
-    {% if post.pin == True %}
-    <div id="post-content" class="pinned-color">
+    {% if messages %}
+      {% for message in messages %}
 
-    {% else %}
-    <div id="post-content">
+      {% if message.tags == 'error' %}
+      <div class="alert alert-danger"> {{ message }} </div>
+      {% else %}
+      <div class="alert alert-{{ message.tags }}"> {{ message }} </div>
+      {% endif %}
 
+      {% endfor %}
     {% endif %}
 
-      {{ post.content|linebreaks }} 
-      <div id="elipsis">
-        <a href="{% url 'post-detail' post.id %}"><i class="fas fa-ellipsis-h"></i></a>
+    <div class="row" class="welcome-post">
+      <div class="col-md-11" style="margin: 0 auto;">
+        <div id="post" class="welcome">
+          <img src="{{ request.user.profile.image.url }}" class="welcome-image" alt="Hey {{ request.user.username }}! You can change at any time!" title="Hey {{ request.user.username }}! You can change at any time!"  />
+          <p>Hi, <span style="color:#ffd770;">{{ request.user.username }}</span>! Welcome to Wolverine DM! This is a place for UM Students
+          and Alumni alike to create posts, share thoughts, and connect with one another! Be civil, and happy posting!</p>
+          <span style="line-height: 55px;"> Your Contributions:</span> <span style="font-size: 0.6em; margin-bottom: 5px;">(Click Some!)</span><br/>
+
+          <div style="margin-bottom: 15px;">
+            <a href="{% url 'user-posts' request.user.username %}" class="hover">
+              <span class="stats posts">Posts:</span>
+            </a>
+            <span style="color: #FFCB05;">
+              {% for ten in number_by_me_10 %}
+              <i class="fas fa-address-book" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #D7D7D7; margin-left: 10px !important;">
+              {% for five in number_by_me_5 %}
+              <i class="fas fa-address-card" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #e08b48; margin-left: 10px !important;">
+              {% for one in number_by_me_1 %}
+              <i class="fas fa-portrait" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+              <span style="color:#ffd770;">{{ posts_by_me }}</span>
+            </span>
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <span class="stats">Comments:</span>
+            <span style="color: #FFCB05;">
+              {% for ten in comment_by_me_10 %}
+              <i class="fas fa-comments" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #D7D7D7; margin-left: 10px !important;">
+              {% for five in comment_by_me_5 %}
+              <i class="fas fa-comment" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #e08b48; margin-left: 10px !important;">
+              {% for one in comment_by_me_1 %}
+              <i class="fas fa-comment-alt" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+              <span style="color:#ffd770;">{{ comments_by_me }}</span>
+            </span>
+          </div>
+
+          <div>
+            <span class="stats">Likes:</span>
+            <span style="color: #FFCB05;">
+              {% for ten in like_by_me_10 %}
+              <i class="fas fa-crown" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #D7D7D7; margin-left: 10px !important;">
+              {% for five in like_by_me_5 %}
+              <i class="fas fa-heart" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+            </span>
+            <span style="color: #e08b48; margin-left: 10px !important;">
+              {% for one in like_by_me_1 %}
+              <i class="fas fa-thumbs-up" style="margin-left: -5px !important;"></i>
+              {% endfor %}
+              <span style="color:#ffd770;">{{ likes_by_me }}</span>
+            </span>
+          </div>
+          
+        </div>
       </div>
     </div>
 
-    <div id="post-footer">
+    <div class="row">
 
-      <div id="like-button">
+      <div class="col-md-2">
 
-        {% if user.is_authenticated %}
+      </div>
 
-          {% if post.pk in likes_list %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="unlike" value="{{ post.pk }}">
-            <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff;"><i class="fas fa-thumbs-up"></i></span> UNLIKE  </button>
-          </form>
+      <div class="col-md-8">
 
+        {% for post in posts %}
+        
+          {% if post.pin == True %}
+          <div id="post" class="post-pinned">
           {% else %}
-          <form method="POST" style="float:left">
-            {% csrf_token %}
-            <input type="hidden" name="like" value="{{ post.pk }}">
-            <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff"><i class="far fa-thumbs-up"></i></span> LIKE  </button>
-          </form>
+          <div id="post">
           {% endif %}
-
-        {% endif %}
-
-      </div>
-
-      <div id="like-images">
         
-        {% for like in likes %}
+            <div id="post-head">
+              <img src="{{ post.author.profile.image.url }}" class="post-image" />
+        
+              <div id="heading">
+                <a href="{% url 'user-posts' post.author.username %}" class="hover">
+                  <p class="post-name"> {{ post.author.username }} </p>
+                </a>
+                <small class="text-muted date"> {{ post.date_posted }}</small>
+              </div>
 
-          <!-- is there a better solution than this? O(nm) -->
-          {% if post == like.post %}
-            {% if post.author == user %}
-              <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked your post!" title="{{ like.user.username }} has liked your post!">
+              {% if post.pin == True %}
+              <p class="post-title pinned" >{{ post.title }}</p>
+              {% else %}
+              <p class="post-title">{{ post.title }}</p>
+              {% endif %}
+        
+              {% if post.author == user %}
+                {% if post.pin == True %}
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="unpinned" value="{{ post.pk }}">
+                    <button class="pin" type="submit" value="{{ post.pk }}"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>
+                  </form>
+        
+                {% else %}
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="pinned" value="{{ post.pk }}">
+                  <button class="pin" type="submit" value="{{ post.pk }}"> <span style="color:#ffe78f;"><i class="far fa-bookmark"></i></span> </button>
+                </form>
+                {% endif %}
+              {% endif %}
+        
+            </div>
+        
+            {% if post.pin == True %}
+            <div id="post-content" class="pinned-color">
             {% else %}
-              <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked this post!">
+            <div id="post-content">
             {% endif %}
-          {% endif %}
-
-        {% endfor %}
         
+              {{ post.content|linebreaks }} 
+              <div id="elipsis">
+                <a href="{% url 'post-detail' post.id %}"><i class="fas fa-ellipsis-h"></i></a>
+              </div>
+
+            </div>
+        
+            <div id="post-footer">
+        
+              <div id="like-button">
+        
+                {% if user.is_authenticated %}
+        
+                  {% if post.pk in likes_list %}
+                  <form method="POST" style="float:left">
+                    {% csrf_token %}
+                    <input type="hidden" name="unlike" value="{{ post.pk }}">
+                    <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff;"><i class="fas fa-thumbs-up"></i></span> UNLIKE  </button>
+                  </form>
+        
+                  {% else %}
+                  <form method="POST" style="float:left">
+                    {% csrf_token %}
+                    <input type="hidden" name="like" value="{{ post.pk }}">
+                    <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff"><i class="far fa-thumbs-up"></i></span> LIKE  </button>
+                  </form>
+                  {% endif %}
+        
+                {% endif %}
+        
+              </div>
+        
+              <div id="like-images">
+                
+                {% for like in likes %}
+        
+                  <!-- is there a better solution than this? O(nm) -->
+                  {% if post == like.post %}
+                    {% if post.author == user %}
+                      <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked your post!" title="{{ like.user.username }} has liked your post!">
+                    {% else %}
+                      <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked this post!">
+                    {% endif %}
+                  {% endif %}
+        
+                {% endfor %}
+                
+              </div>
+        
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
-
+      <div class="col-md-2">
+      </div>
     </div>
-  </div>
-  {% endfor %}
 
-</div>
+  </main>
 
-{% endblock %}
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

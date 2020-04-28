@@ -99,7 +99,7 @@ img.logo {
 
 #preview, #preview-short, #short {
     background-color: grey;
-    background-image: url('/static/users/images/post-background.png');
+    background-image: url('/static/users/images/loading.png');
     background-size: cover;
     font-size: 2.4em;
     width: 40%;
