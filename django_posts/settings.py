@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
+from boto.s3.connection import S3Connection
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -145,7 +146,7 @@ EMAIL_HOST_PASSWORD = 'nsbvwjksxttjcylh'
 django_heroku.settings(locals())
 
 AWS_ACCESS_KEY_ID='AKIAR76ERFVG6CAD4RW7'
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 AWS_STORAGE_BUCKET_NAME = 'wolverine-dm-files'
 
 AWS_S3_FILE_OVERWRITE = False
