@@ -145,7 +145,7 @@ EMAIL_HOST_PASSWORD = 'nsbvwjksxttjcylh'
 django_heroku.settings(locals())
 
 AWS_ACCESS_KEY_ID = 'AKIAR76ERFVG3HOWGEVT'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'wolverine-dm-files'
 
 AWS_S3_FILE_OVERWRITE = False
