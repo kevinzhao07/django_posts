@@ -1,6 +1,11 @@
 ## Wolverine-DM Change Logs
 
-#### Release Beta 1.1 ()
+#### Release Beta 1.2 (Released 04-27-2020 2200 EST)
+Bug Fixes: 
+1. When Previewing Site or getting into the home page without loggin in, an error occurs. Fixed now. 
+2. Small spacing issues.
+
+#### Release Beta 1.1 (Released 04-27-2020 2200 EST)
 Primarily Bug/Design Fixes.
 1. fixed bug where new messages sent wouldn't have their respective colors and only showed up with `default-blue`. 
 2. changed background from `fixed` to `repeat`, leaving wolverine static.

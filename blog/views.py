@@ -34,9 +34,14 @@ def home(request):
   post_all = post_all_pinned + post_all_unpinned
 
   # stats count
-  posts_by_me = Post.objects.filter(author=request.user)
-  comments_by_me = Comment.objects.filter(author=request.user)
-  likes_by_me = Like.objects.filter(user=request.user)
+  if request.user.is_authenticated:
+    posts_by_me = Post.objects.filter(author=request.user)
+    comments_by_me = Comment.objects.filter(author=request.user)
+    likes_by_me = Like.objects.filter(user=request.user)
+  else:
+    posts_by_me = Post.objects.filter(title="not in")
+    comments_by_me = Comment.objects.filter(content="comment")
+    likes_by_me = Like.objects.filter()
 
   # populate list_likes with post.pk of posts that have been liked by the user that is logged in
   list_likes = []

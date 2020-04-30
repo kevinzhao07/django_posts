@@ -38,7 +38,7 @@ class Like(models.Model):
 class Message(models.Model):
   sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
   receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver')
-  message = models.TextField()
+  message = models.CharField(max_length=560)
   date_sent = models.DateTimeField(default=datetime.now())
   color = models.CharField(max_length=20, default="regular-blue")
 
