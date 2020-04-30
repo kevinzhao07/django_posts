@@ -14,26 +14,26 @@ import os
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lpy%jj9)u&d9=!-^^5hye-r@xu0^tgw-!9xy5l+4dfz-(#qdnp'
+SECRET_KEY = os.environ.get('SECRET KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG=True
 
-ALLOWED_HOSTS = ['wolverine-dm.herokuapp.com']
+ALLOWED_HOSTS=['wolverine-dm.herokuapp.com']
 
 
 # Application definition
 
 # list of all our installed apps, we just added our blogs app, and the
 # function defined there, which was BlogConfig
-INSTALLED_APPS = [
+INSTALLED_APPS=[
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE=[
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,9 +56,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'django_posts.urls'
+ROOT_URLCONF='django_posts.urls'
 
-TEMPLATES = [
+TEMPLATES=[
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
@@ -74,13 +74,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_posts.wsgi.application'
+WSGI_APPLICATION='django_posts.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+DATABASES={
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -91,7 +91,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS=[
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -110,46 +110,45 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE='en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE='UTC'
 
-USE_I18N = True
+USE_I18N=True
 
-USE_L10N = True
+USE_L10N=True
 
-USE_TZ = True
+USE_TZ=True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_URL='/static/'
+STATIC_ROOT=os.path.join(BASE_DIR, 'static/')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
+MEDIA_URL='/media/'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK='bootstrap4'
 
-LOGIN_REDIRECT_URL = 'blog-home'
-LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL='blog-home'
+LOGIN_URL='login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'kevinzhao69'
-EMAIL_HOST_PASSWORD = 'nsbvwjksxttjcylh'
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER='kevinzhao69'
+EMAIL_HOST_PASSWORD='nsbvwjksxttjcylh'
 
 django_heroku.settings(locals())
 
-AWS_ACCESS_KEY_ID = 'AKIAR76ERFVG3HOWGEVT'
-val = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = val
-AWS_STORAGE_BUCKET_NAME = 'wolverine-dm-files'
+AWS_ACCESS_KEY_ID='AKIAR76ERFVG3HOWGEVT'
+AWS_SECRET_ACCESS_KEY='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'
+AWS_STORAGE_BUCKET_NAME='wolverine-dm-files'
 
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE=False
+AWS_DEFAULT_ACL=None
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
