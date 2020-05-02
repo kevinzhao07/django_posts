@@ -127,25 +127,49 @@ def home(request):
         messages.warning(request, f'Pinned your post! "{obj.title}"')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    # creates/deletes a new Like model for every like/unlike
-    elif like != False:
-      user_like = get_object_or_404(User, username=username)
-      post_like = get_object_or_404(Post, pk=like)
-      like_model = Like(user=user_like, post=post_like)
-      like_model.save()
+    # # creates/deletes a new Like model for every like/unlike
+    # elif like != False:
+    #   user_like = get_object_or_404(User, username=username)
+    #   post_like = get_object_or_404(Post, pk=like)
+    #   like_model = Like(user=user_like, post=post_like)
+    #   like_model.save()
 
-      messages.success(request, f'''You liked {post_like.author.username}'s post, "{post_like.title}"''')
-      return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #   messages.success(request, f'''You liked {post_like.author.username}'s post, "{post_like.title}"''')
+    #   return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    elif unlike != False:
-      user_unlike = get_object_or_404(User, username=username)
-      post_unlike = get_object_or_404(Post, pk=unlike)
-      like_to_delete = get_object_or_404(Like, user=user_unlike, post=post_unlike)
-      like_to_delete.delete()
-      messages.success(request, f'''You unliked {post_unlike.author.username}'s post, "{post_unlike.title}"''')
-      return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # elif unlike != False:
+    #   user_unlike = get_object_or_404(User, username=username)
+    #   post_unlike = get_object_or_404(Post, pk=unlike)
+    #   like_to_delete = get_object_or_404(Like, user=user_unlike, post=post_unlike)
+    #   like_to_delete.delete()
+    #   messages.success(request, f'''You unliked {post_unlike.author.username}'s post, "{post_unlike.title}"''')
+    #   return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
   return render(request, 'blog/home2.html', context)
+
+def like(request):
+  if request.method == "GET":
+    post_pk = request.GET['post_pk']
+    like_user = request.GET['like_user']
+    liked_post = Post.objects.get(pk=post_pk)
+    liked_user = User.objects.get(username=like_user)
+    new_like = Like(user=liked_user, post=liked_post)
+    new_like.save()
+    return HttpResponse('success')
+  else:
+    return HttpResponse('unsuccessful')
+
+def unlike(request):
+  if request.method == "GET":
+    post_pk = request.GET['post_pk']
+    like_user = request.GET['like_user']
+    liked_post = Post.objects.get(pk=post_pk)
+    liked_user = User.objects.get(username=like_user)
+    old_like = get_object_or_404(Like, user=liked_user, post=liked_post)
+    old_like.delete()
+    return HttpResponse('success')
+  else:
+    return HttpResponse('unsuccessful')
 
 # same as home view with less functionality, but in a Class based view
 class UserPostListView(ListView):

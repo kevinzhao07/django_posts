@@ -15,5 +15,8 @@ urlpatterns = [
     path('user/<str:username>', UserPostListView.as_view(), name='user-posts'),
     path('liked/', views.liked, name="user-likes"),
     path('messages/', views.chat, name="messages"),
+    path('like/', views.like, name='like'),
+    path('unlike/', views.unlike, name='unlike'),
+
     path('messages/<str:username>', views.messagesPerson, name="messages-person")
 ]

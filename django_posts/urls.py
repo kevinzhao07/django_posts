@@ -26,6 +26,7 @@ urlpatterns = [
     # /blog will map to blog.urls(.py), and there we have path that maps
     # onto views.(py)home(func)
     path('', users_views.home, name="home"),
+    path('ajax/', include('blog.urls')),
     path('blog/', include('blog.urls')),
     path('register/', users_views.register, name="register"),
     path('profile/', users_views.profile, name="profile"),

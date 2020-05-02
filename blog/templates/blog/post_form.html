@@ -1,21 +1,40 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-  <div class="content-section"> 
+  <div id="post" class="top-margin"> 
+
+    <div id="post-head">
+      <img draggable="false" src="{{ request.user.profile.image.url }}" class="post-image" />
+
+      <div id="heading">
+        <a href="{% url 'user-posts' request.user.username %}" class="hover">
+          <p class="post-name top-margin"> {{ request.user.username }} </p>
+        </a>
+        <small class="text-muted date top-margin"> Date posted here! </small>
+      </div>
+
+      <!-- TODO: HAVE TO ADD TITLE HERE  -->
+
 
     <form method="POST">
       {% csrf_token %}
-      <fieldset class="form-group">
-        <legend class="border-bottom mb-4"> Write Your Thoughts! </legend>
         {{ form|crispy }}
-      </fieldset>
-      <div class="form-group">
-        <button class="btn btn-outline-info" type="submit"> Create Your Post! </button>
-      </div> 
+      <button class="item float-right post-confirm" type="submit"><span style="font-size: 0.9em"><i class="fas fa-share-square"></i></span> Post! </a>
       {% if post.author == user %}
         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}"> Delete Me </a>
       {% endif %}
     </form>
+
+    </div>
     
   </div>
+
+  <script type="text/javascript">
+    $('label').remove();
+    $('#id_title').remove();
+    $('#id_content').remove();
+    $('#div_id_title').append('<input type="text" name="title" maxlength="100" class="textinput textInput form-control" required="" id="id_title" placeholder="Click to add title!">');
+    $('#div_id_content').append('<textarea name="content" cols="40" rows="10" class="textarea form-control" required="" id="id_content" placeholder="What'+"'"+'s on your mind?"></textarea>')
+  </script>
+
 {% endblock content %}

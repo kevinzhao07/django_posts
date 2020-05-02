@@ -1,5 +1,11 @@
 ## Wolverine-DM Change Logs
 
+#### Release Beta 1.2 (Release)
+Working on implementing jQuery, AJAX, and JS into our project to stop automatic reloads on likes and pinning posts. As of now, 05-01-2020 21:00 EST, liking on the home page works.
+- doesn't reload on every like, and updates the "like photo feed" dynamically. 
+- doesn't update the statistics portion dynamically, but don't think it is necessary. 
+
+New post page got a complete remodeling, and fits in with the entire theme of everything. The white was too contrasting with the darker blue and grey background, so now it has been blended in and looks like an actual post. The post has some placeholder text to indicate where to write. 
 #### Release Beta 1.1 (Released 04-30-2020 1455 EST)
 Primarily Bug/Design Fixes.
 1. fixed bug where new messages sent wouldn't have their respective colors and only showed up with `default-blue`. 
@@ -7,6 +13,8 @@ Primarily Bug/Design Fixes.
 3. DateTime model entries will now be shown in EST (UTC-5:00) instead of UTC (may convert back)
 4. home page has a welcome message for users. It's now easier to see who you're logged in as, and statistics are offerred for users. 
 5. files (such as static .css, .js, images, and profile pictures) are now stored within aws system, so it fixes a bug with them being deleted every time heroku stopped running (every 15-30 minutes)
+
+**Updates for the future**: 'likes' and 'pinning' all cause a refresh, which I don't like. Comments and messages also do this, which I haven't fixed yet but my main concern is fixing the front page for now to fix liking and pinning. 
 
 #### Release Beta 1.0 (Released 04-25-2020 2230 EST)
 First Release of 1.0 of **Wolverteen De-UM**! Might think about changing the name to Wolverine-DM but for now, I'm leaving it like this. There's a lot of bugs but hopefully the beta testers will figure them out.

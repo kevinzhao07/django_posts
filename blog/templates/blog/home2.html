@@ -18,10 +18,23 @@
 
   <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
   <link rel="shortcut icon" href="{% static 'users/images/favicon.ico' %}"/>
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <img src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
+
+  <img draggable="false" src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
 
   <main role="main" class="container">
     <div class="row">
@@ -60,7 +73,7 @@
     <div class="row" class="welcome-post">
       <div class="col-md-11" style="margin: 0 auto;">
         <div id="post" class="welcome">
-          <img src="{{ request.user.profile.image.url }}" class="welcome-image" alt="Hey {{ request.user.username }}! You can change at any time!" title="Hey {{ request.user.username }}! You can change at any time!"  />
+          <img draggable="false" src="{{ request.user.profile.image.url }}" class="welcome-image" alt="Hey {{ request.user.username }}! You can change at any time!" title="Hey {{ request.user.username }}! You can change at any time!"  />
           <p>Hi, <span style="color:#ffd770;">{{ request.user.username }}</span>! Welcome to Wolverine DM! This is a place for UM Students
           and Alumni alike to create posts, share thoughts, and connect with one another! Be civil, and happy posting!</p>
           <span style="line-height: 55px;"> Your Contributions:</span> <span style="font-size: 0.6em; margin-bottom: 5px;">(Click Some!)</span><br/>
@@ -152,7 +165,7 @@
           {% endif %}
         
             <div id="post-head">
-              <img src="{{ post.author.profile.image.url }}" class="post-image" />
+              <img draggable="false" src="{{ post.author.profile.image.url }}" class="post-image" />
         
               <div id="heading">
                 <a href="{% url 'user-posts' post.author.username %}" class="hover">
@@ -206,34 +219,26 @@
                 {% if user.is_authenticated %}
         
                   {% if post.pk in likes_list %}
-                  <form method="POST" style="float:left">
-                    {% csrf_token %}
-                    <input type="hidden" name="unlike" value="{{ post.pk }}">
-                    <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff;"><i class="fas fa-thumbs-up"></i></span> UNLIKE  </button>
-                  </form>
+                    <button class="like-button-testing like is-unliked" id="like{{post.pk}}" data-catid="{{ post.pk }}" data-user="{{ request.user.username }}" data-photo="{{ request.user.profile.image.url }}" onclick="like(this)"><span style="color: #6691ff;"><i class="fas fa-thumbs-up"></i></span> UNLIKE </button>
         
                   {% else %}
-                  <form method="POST" style="float:left">
-                    {% csrf_token %}
-                    <input type="hidden" name="like" value="{{ post.pk }}">
-                    <button class="like" type="submit" value="{{ post.pk }}"> <span style="color: #6691ff"><i class="far fa-thumbs-up"></i></span> LIKE  </button>
-                  </form>
+                    <button class="like-button-testing like is-liked" id="like{{post.pk}}" data-catid="{{ post.pk }}" data-user="{{ request.user.username }}" data-photo="{{ request.user.profile.image.url }}" onclick="like(this)"><span style="color: #6691ff;"><i class="far fa-thumbs-up"></i></span> LIKE  </button>
                   {% endif %}
         
                 {% endif %}
         
               </div>
         
-              <div id="like-images">
+              <div id="like-images" class="like-images-{{ post.pk }}">
                 
                 {% for like in likes %}
         
                   <!-- is there a better solution than this? O(nm) -->
                   {% if post == like.post %}
                     {% if post.author == user %}
-                      <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked your post!" title="{{ like.user.username }} has liked your post!">
+                      <img draggable="false" src="{{ like.user.profile.image.url }}" class="like-photos like-photos-{{post.pk}}{{like.user.username}}" alt="{{ like.user.username }} has liked your post!" title="{{ like.user.username }} has liked your post!">
                     {% else %}
-                      <img src="{{ like.user.profile.image.url }}" class="like-photos" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked this post!">
+                      <img draggable="false" src="{{ like.user.profile.image.url }}" class="like-photos like-photos-{{post.pk}}{{like.user.username}}" alt="{{ like.user.username }} has liked this post!" title="{{ like.user.username }} has liked this post!">
                     {% endif %}
                   {% endif %}
         
@@ -244,6 +249,7 @@
             </div>
           </div>
           {% endfor %}
+
         </div>
       </div>
       <div class="col-md-2">
@@ -252,17 +258,45 @@
 
   </main>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+  <script type="text/javascript">
+
+    function like(ele) {
+      var id = "like" + ele.dataset.catid;
+      var id_images = "like-images-" + ele.dataset.catid;
+      var username = ele.dataset.user;
+      var pk = ele.dataset.catid;
+      var id_images_delete = "like-photos-" + pk + username;
+      var images_url = ele.dataset.photo;
+      var element = document.getElementById(id);
+      if (element.classList.contains("is-liked")) {
+        element.classList.remove("is-liked");
+        element.classList.add("is-unliked");
+        $.ajax({
+          url: "like/",
+          data: {
+            post_pk: ele.dataset.catid,
+            like_user: username,
+          },
+        });
+        $('#'+id).html('<span style="color: #6691ff;"><i class="fas fa-thumbs-up"></i></span> UNLIKE');
+        $('.'+id_images).append('<img draggable="false" src=' + images_url + ' class="like-photos like-photos-'+pk+username+'" alt="'+username+' has liked this post!" title="'+username+' has liked this post!">');
+      }
+      else {
+        element.classList.remove("is-unliked");
+        element.classList.add("is-liked");
+        $.ajax({
+          url: "unlike/",
+          data: {
+            post_pk: ele.dataset.catid,
+            like_user: username,
+          },
+        });
+        $('#'+id).html('<span style="color: #6691ff;"><i class="far fa-thumbs-up"></i></span> LIKE ');
+        $('.'+id_images_delete).remove();
+      }
+    }
+
+  </script>
 
 </body>
 
