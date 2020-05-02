@@ -10,7 +10,7 @@
         <a href="{% url 'user-posts' request.user.username %}" class="hover">
           <p class="post-name top-margin"> {{ request.user.username }} </p>
         </a>
-        <small class="text-muted date top-margin"> Date posted here! </small>
+        <small class="text-muted date top-margin"> {% now "F n, Y, g:i a" %} </small>            
       </div>
 
       <!-- TODO: HAVE TO ADD TITLE HERE  -->

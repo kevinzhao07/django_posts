@@ -73,7 +73,7 @@
     <div class="row" class="welcome-post">
       <div class="col-md-11" style="margin: 0 auto;">
         <div id="post" class="welcome">
-          <img draggable="false" src="{{ request.user.profile.image.url }}" class="welcome-image" alt="Hey {{ request.user.username }}! You can change at any time!" title="Hey {{ request.user.username }}! You can change at any time!"  />
+          <img draggable="false" src="{{ request.user.profile.image.url }}" class="welcome-image" alt="Hey {{ request.user.username }}! You can change this at any time!" title="Hey {{ request.user.username }}! You can change this at any time!"  />
           <p>Hi, <span style="color:#ffd770;">{{ request.user.username }}</span>! Welcome to Wolverine DM! This is a place for UM Students
           and Alumni alike to create posts, share thoughts, and connect with one another! Be civil, and happy posting!</p>
           <span style="line-height: 55px;"> Your Contributions:</span> <span style="font-size: 0.6em; margin-bottom: 5px;">(Click Some!)</span><br/>
@@ -159,9 +159,9 @@
         {% for post in posts %}
         
           {% if post.pin == True %}
-          <div id="post" class="post-pinned">
+          <div id="post" class="post-pinned post-{{post.pk}}">
           {% else %}
-          <div id="post">
+          <div id="post" class="post-{{post.pk}}">
           {% endif %}
         
             <div id="post-head">
@@ -175,34 +175,27 @@
               </div>
 
               {% if post.pin == True %}
-              <p class="post-title pinned" >{{ post.title }}</p>
+              <p id="title{{post.pk}}" class="post-title pinned" >{{ post.title }}</p>
               {% else %}
-              <p class="post-title">{{ post.title }}</p>
+              <p id="title{{post.pk}}" class="post-title">{{ post.title }}</p>
               {% endif %}
         
-              {% if post.author == user %}
-                {% if post.pin == True %}
-                  <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="unpinned" value="{{ post.pk }}">
-                    <button class="pin" type="submit" value="{{ post.pk }}"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>
-                  </form>
-        
-                {% else %}
-                <form method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="pinned" value="{{ post.pk }}">
-                  <button class="pin" type="submit" value="{{ post.pk }}"> <span style="color:#ffe78f;"><i class="far fa-bookmark"></i></span> </button>
-                </form>
+              <div id="button-pin{{post.pk}}">
+                {% if post.author == user %}
+                  {% if post.pin == True %}
+                    <button class="pin pin-button-js is-pin" id="pin{{post.pk}}" data-catid="{{ post.pk }}" onclick="pin(this)"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>
+                  {% else %}
+                    <button class="pin pin-button-js is-unpin" id="pin{{post.pk}}" data-catid="{{ post.pk }}" onclick="pin(this)"><span style="color:#ffc900;"><i class="far fa-bookmark"></i></span> </button>
+                  {% endif %}
                 {% endif %}
-              {% endif %}
+              </div>
         
             </div>
         
             {% if post.pin == True %}
-            <div id="post-content" class="pinned-color">
+            <div id="post-content" class="pinned-color content-{{post.pk}}">
             {% else %}
-            <div id="post-content">
+            <div id="post-content" class="content-{{post.pk}}">
             {% endif %}
         
               {{ post.content|linebreaks }} 
@@ -295,6 +288,55 @@
         $('.'+id_images_delete).remove();
       }
     }
+
+    function pin(ele) {
+      var pk = ele.dataset.catid;
+      var id = "pin" + ele.dataset.catid;
+      var div_id = "button-" + id;
+      var title_id = "title" + pk;
+      var element = document.getElementById(id);
+      var post_class = "post-" + pk;
+      var content_class = "content-" + pk;
+      if (element.classList.contains("is-pin")) {
+        $.ajax({
+          url: "unpin/",
+          data: {
+            post_pk: ele.dataset.catid,
+          },
+        });
+        $('#'+id).remove()
+        $('#'+div_id).html('<button class="pin pin-button-js is-unpin" id="pin'+pk+'" data-catid="'+pk+'" onclick="pin(this)"><span style="color:#ffc900;"><i class="far fa-bookmark"></i></span> </button>');
+        var title = document.getElementById(title_id);
+        title.classList.remove("pinned");
+
+        var post = document.getElementsByClassName(post_class);
+        post[0].classList.remove("post-pinned");
+
+        var content = document.getElementsByClassName(content_class);
+        content[0].classList.remove("pinned-color");
+      }
+
+      else {
+        $.ajax({
+          url: "pin/",
+          data: {
+            post_pk: ele.dataset.catid,
+          },
+        });
+        $('#'+id).remove()
+        $('#'+div_id).html('<button class="pin pin-button-js is-pin" id="pin'+pk+'" data-catid="'+pk+'"  onclick="pin(this)"><span style="color:#ffc900;"><i class="fas fa-bookmark"></i></span> </button>');
+        var title = document.getElementById(title_id);
+        title.classList.add("pinned")
+
+        var post = document.getElementsByClassName(post_class);
+        post[0].classList.add("post-pinned");
+
+        var content = document.getElementsByClassName(content_class);
+        content[0].classList.add("pinned-color");
+      }
+    }
+
+
 
   </script>
 

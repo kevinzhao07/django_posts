@@ -171,6 +171,26 @@ def unlike(request):
   else:
     return HttpResponse('unsuccessful')
 
+def pin(request):
+  if request.method == "GET":
+    post_pk = request.GET['post_pk']
+    post_to_pin = Post.objects.get(pk=post_pk)
+    post_to_pin.pin = True
+    post_to_pin.save()
+    return HttpResponse('success')
+  else:
+    return HttpResponse('unsuccessful')
+
+def unpin(request):
+  if request.method == "GET":
+    post_pk = request.GET['post_pk']
+    post_to_pin = Post.objects.get(pk=post_pk)
+    post_to_pin.pin = False
+    post_to_pin.save()
+    return HttpResponse('success')
+  else:
+    return HttpResponse('unsuccessful')
+
 # same as home view with less functionality, but in a Class based view
 class UserPostListView(ListView):
   model = Post

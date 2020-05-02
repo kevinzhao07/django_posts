@@ -1,4 +1,8 @@
-have create a new post area look just like the actual posts and stuff that look sso cool
 fix profile
-have background go in opposite direcdtions slowly thats cool   
-profile is like a home page where all the users posts are 
+profile is like a home page where all the users posts are (like fb)
+
+simple website no css
+repo break fb
+wiki philsophy
+interactive orona
+pull stocks new data

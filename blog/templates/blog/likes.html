@@ -1,29 +1,51 @@
 {% extends "blog/base.html" %}
 {% block content %}
-<h1 class="mb-3"> {{ request.user.username }}'s Liked Posts </h1>
+<h1 class="mb-3 user-posts"> {{ request.user.username }}'s Liked Posts </h1>
 
-    <!-- still separation of pinned/regular posts -->
-    {% for like in likes %}
-        {% if like.post.pin == True %}
-            <article class="media content-section" style="background-color:#E9F4FD">
-        {% else %}
-            <article class="media content-section">
+<!-- still separation of pinned/regular posts -->
+{% for like in likes %}
+{% if like.post.pin == True %}
+<div id="post" class="post-pinned">
+
+  {% else %}
+  <div id="post">
+
+    {% endif %}
+
+    <div id="post-head">
+
+      <img src="{{ like.post.author.profile.image.url }}" class="post-image" />
+
+      <div id="heading">
+        <a href="{% url 'user-posts' like.post.author.username %}" class="hover">
+          <p class="post-name"> {{ like.post.author.username }} </p>
+        </a>
+        <small class="text-muted date"> {{ like.post.date_posted }}</small>
+      </div>
+      {% if like.post.pin == True %}
+      <p class="post-title pinned">{{ like.post.title }}</p>
+
+      {% else %}
+      <p class="post-title">{{ like.post.title }}</p>
+
+      {% endif %}
+
+    </div>
+
+    {% if like.post.pin == True %}
+    <div id="post-content" class="pinned-color no-border">
+
+      {% else %}
+      <div id="post-content" class="no-border">
+
         {% endif %}
 
-        <img class="rounded-circle article-img" src="{{ like.post.author.profile.image.url }}">
-        <div class="media-body">
-            <div class="article-metadata">
-            <a class="mr-2" href="{% url 'user-posts' like.post.author.username %}">{{ like.post.author }}</a>
-            <small class="text-muted">{{ like.post.date_posted }}</small>
-            </div>
-            {% if like.post.pin == True %}
-                <h2 class="article-title pinned" >{{ like.post.title }}</h2>
-            {% else %}
-                <h2 class="article-title">{{ like.post.title }}</h2>
-            {% endif %}        
-            <p class="article-content">{{ like.post.content }}</p>
+        {{ like.post.content|linebreaks }}
+        <div id="elipsis-user">
+          <a href="{% url 'post-detail' like.post.id %}"><i class="fas fa-ellipsis-h"></i></a>
         </div>
-        </article>
+      </div>
+    </div>
     {% endfor %}
 
-{% endblock content %}
+    {% endblock content %}

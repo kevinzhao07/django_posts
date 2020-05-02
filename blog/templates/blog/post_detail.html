@@ -77,18 +77,43 @@
       {% endfor %}
       
       <div id="comment-form">
+        {% if post.pin == True %}
+        <div id="comment" class="invert long">
+        {% else %}
+        <div id="comment" class="long">
+        {% endif %}
+          <img class="comment-image" src="{{ request.user.profile.image.url }}">
+          <div id="comment-header">
+            <a class="comment-user" href="{% url 'user-posts' request.user.username %}">{{ request.user.username }}</a>
+            <small class="text-muted comment-date">{% now "F n, Y, g:i a" %}</small>            
+          </div>
+
+
         <form method="POST" class="fixing-alignment">
           {% csrf_token %}
-          <legend class="border-bottom mt-4 mb-2">Have a Thought? Write a Comment!</legend>
           <fieldset class="form-group">
             {{ form|crispy }}
           </fieldset>
           <div class="form-group">
-            <button class="btn btn-info"style="float:right; margin-bottom: 10px; margin-top: -10px;" type="submit"> Comment! </button>
+            <a class="item float-right comment-button"><span style="font-size: 0.9em"><i class="far fa-paper-plane"></i></span> Comment</a>
           </div> 
         </form>
       </div>
     </div>
   </div>
 
-  {% endblock content %}
+  <script type="text/javascript">
+    $('.requiredField').remove();
+    $('#id_content').remove();
+
+    var id = "comment"
+    var element = document.getElementById(id);
+    if (element.classList.contains("invert")) {
+      $('#div_id_content').append('<textarea type="text" name="content" class="comment-content-form" required="" id="comment_content" rows="3" placeholder="Comment here!">');
+    }
+    else {
+      $('#div_id_content').append('<textarea type="text" name="content" class="comment-content-form invert-background" required="" id="comment_content" rows="3" placeholder="Comment here!">');
+    }
+  </script>
+
+{% endblock content %}

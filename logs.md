@@ -5,7 +5,13 @@ Working on implementing jQuery, AJAX, and JS into our project to stop automatic 
 - doesn't reload on every like, and updates the "like photo feed" dynamically. 
 - doesn't update the statistics portion dynamically, but don't think it is necessary. 
 
+As of 05-02-2020 20:00 EST, pinning any post changes the textures, but doesn't pin post to the top until a refresh (this is intended). However, this allows users to pin unlimited post, this may change in the future. 
+- thinking of adding a statistic of how many posts pinned?
+
 New post page got a complete remodeling, and fits in with the entire theme of everything. The white was too contrasting with the darker blue and grey background, so now it has been blended in and looks like an actual post. The post has some placeholder text to indicate where to write. 
+
+Comments got an update as well, so the white form is all gone. The comment form is now displayed as if an actual comment. UI looks smoother and fits in with the theme.
+
 #### Release Beta 1.1 (Released 04-30-2020 1455 EST)
 Primarily Bug/Design Fixes.
 1. fixed bug where new messages sent wouldn't have their respective colors and only showed up with `default-blue`. 
