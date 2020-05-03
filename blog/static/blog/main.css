@@ -841,6 +841,7 @@ textarea#id_content {
 
 div.long {
   width: 100% !important;
+  margin-top: 30px;
 }
 
 .comment-button {
