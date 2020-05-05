@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # make sure to import all models/forms that are used
 from django.contrib.auth.models import User
-from .forms import CommentForm, MessageForm, TodoForm
+from .forms import CommentForm, MessageForm, TodoForm, PostForm
 from .models import Post, Comment, Like, Message, Todo
 from django.utils import timezone
 
@@ -72,6 +72,25 @@ def home(request):
   like_count_5 = (like_count - (like_count_10 * 10)) // 5
   like_count_1 = (like_count - (like_count_10 * 10) - (like_count_5 * 5))
 
+  # can write our own function inside a function to make valid form handling easier
+  def form_valid(form, request):
+
+    # since author/post/date_posted is not explicitly defined inside the form, we want to save everything we have
+    # so far (commit = False), and using the same object, fill in the other entries
+    modelForm = form.save(commit = False)
+    modelForm.author = request.user
+    modelForm.date_posted = timezone.now()
+    modelForm.pin = False
+    modelForm.save()
+    return redirect('blog-home')
+
+  if request.method == "POST":
+    form = PostForm(request.POST)
+    if form.is_valid():
+      return form_valid(form, request)
+  else:
+    form = PostForm()
+
   # context includes now all posts (in pinned/unpinned order), array of all posts liked, and page #
   context = {
     'posts': post_all,
@@ -89,43 +108,43 @@ def home(request):
     'like_by_me_10': [0] * int(like_count_10),
     'like_by_me_5': [0] * int(like_count_5),
     'like_by_me_1': [0] * int(like_count_1),
-
+    'form': form,
   }
 
-  # if form has been submitted -- all "forms" are in the form of submit buttons with hidden input lines
-  if request.method == "POST":
-    
-    # used to process which submit button was clicked, the others will return False (best solution?)
-    postID_pin = request.POST.get('pinned', False)
-    postID_unpin = request.POST.get('unpinned', False)
-    like = request.POST.get('like', False)
-    unlike = request.POST.get('unlike', False)
-
-    username = request.user.username
-
-    # if unpin button is clicked, we can retrieve the affected post by postID and SAVE it (important!)
-    if postID_unpin != False:
-      obj = get_object_or_404(Post, pk=postID_unpin)
-      obj.pin = False
-      obj.save()
-      messages.info(request, f'Unpinned your post "{obj.title}"')
-      return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # allows redirect to the same page in pagination
-    
-    elif postID_pin != False:
-      user = get_object_or_404(User, username=username)
-      posts = Post.objects.filter(author=user, pin=True)
-      pinnedCount = posts.count()
+    # # if form has been submitted -- all "forms" are in the form of submit buttons with hidden input lines
+    # if request.method == "POST":
       
-      if pinnedCount == 2:
-        messages.error(request, f'Cannot pin more than 2 posts.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #   # used to process which submit button was clicked, the others will return False (best solution?)
+    #   postID_pin = request.POST.get('pinned', False)
+    #   postID_unpin = request.POST.get('unpinned', False)
+    #   like = request.POST.get('like', False)
+    #   unlike = request.POST.get('unlike', False)
+
+    #   username = request.user.username
+
+    #   # if unpin button is clicked, we can retrieve the affected post by postID and SAVE it (important!)
+    #   if postID_unpin != False:
+    #     obj = get_object_or_404(Post, pk=postID_unpin)
+    #     obj.pin = False
+    #     obj.save()
+    #     messages.info(request, f'Unpinned your post "{obj.title}"')
+    #     return HttpResponseRedirect(request.META.get('HTTP_REFERER')) # allows redirect to the same page in pagination
       
-      else:
-        obj = get_object_or_404(Post, pk=postID_pin)
-        obj.pin = True
-        obj.save()
-        messages.warning(request, f'Pinned your post! "{obj.title}"')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #   elif postID_pin != False:
+    #     user = get_object_or_404(User, username=username)
+    #     posts = Post.objects.filter(author=user, pin=True)
+    #     pinnedCount = posts.count()
+        
+    #     if pinnedCount == 2:
+    #       messages.error(request, f'Cannot pin more than 2 posts.')
+    #       return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+    #     else:
+    #       obj = get_object_or_404(Post, pk=postID_pin)
+    #       obj.pin = True
+    #       obj.save()
+    #       messages.warning(request, f'Pinned your post! "{obj.title}"')
+    #       return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     # # creates/deletes a new Like model for every like/unlike
     # elif like != False:
@@ -196,7 +215,6 @@ class UserPostListView(ListView):
   model = Post
   template_name = 'blog/user_posts.html'
   context_object_name = 'posts'
-  paginate_by = 10
 
   def get_queryset(self):
     user = get_object_or_404(User, username=self.kwargs.get('username'))

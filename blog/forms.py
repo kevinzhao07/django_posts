@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment, Message, Todo
+from .models import Comment, Message, Todo, Post
 
 # each model requires a form (if needed) and a class Meta, which
 # specifies the model and fields that will be displayed
@@ -18,3 +18,8 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = Todo
         fields = ['due_date', 'todo']
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']

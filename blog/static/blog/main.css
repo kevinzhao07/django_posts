@@ -305,6 +305,10 @@ p.post-name {
   position: relative;
 } 
 
+div.invisible {
+  display: none;
+}
+
 div.post-pinned {
   background-image: url('/static/users/images/post-pinned.png') !important;
 }
@@ -822,6 +826,7 @@ textarea#id_content {
 .post-confirm {
   background-image: url('/static/users/images/post-pinned.png') !important;
   margin: 15px 10px 10px 0px;
+  text-shadow: 4px 4px #4d4d4d;
 }
 
 .comment-content-form {

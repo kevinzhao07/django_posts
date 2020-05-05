@@ -13,28 +13,22 @@
         <small class="text-muted date top-margin"> {% now "F n, Y, g:i a" %} </small>            
       </div>
 
-      <!-- TODO: HAVE TO ADD TITLE HERE  -->
-
-
-    <form method="POST">
-      {% csrf_token %}
-        {{ form|crispy }}
-      <button class="item float-right post-confirm" type="submit"><span style="font-size: 0.9em"><i class="fas fa-share-square"></i></span> Post! </a>
-      {% if post.author == user %}
-        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}"> Delete Me </a>
-      {% endif %}
-    </form>
-
+      <form method="POST">
+        {% csrf_token %}
+          {{ form|crispy }}
+          <button class="item float-right post-confirm" type="submit"><span style="font-size: 0.9em"><i class="fas fa-share-square"></i></span> Post! </button>
+        {% if post.author == user %}
+        <a class="item float-left post-confirm ml-2" href="{% url 'post-delete' post.id %}"><span style="font-size: 0.9em"><i class="fas fa-trash-alt"></i></span> Delete Post</a>
+        {% endif %}
+      </form>
     </div>
-    
   </div>
 
   <script type="text/javascript">
     $('label').remove();
-    $('#id_title').remove();
-    $('#id_content').remove();
-    $('#div_id_title').append('<input type="text" name="title" maxlength="100" class="textinput textInput form-control" required="" id="id_title" placeholder="Click to add title!">');
-    $('#div_id_content').append('<textarea name="content" cols="40" rows="10" class="textarea form-control" required="" id="id_content" placeholder="What'+"'"+'s on your mind?"></textarea>')
+    $('#id_title').attr('placeholder', "Click to add title!");
+    $('#id_content').attr('placeholder', "What's on your mind?");
+
   </script>
 
 {% endblock content %}

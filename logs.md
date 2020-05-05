@@ -1,6 +1,6 @@
 ## Wolverine-DM Change Logs
 
-#### Release Beta 1.2 (Release)
+#### Release Beta 1.2 (Release 05-04-2020 2140 EST)
 
 **As of 05-01-2020:**  
 Working on implementing jQuery, AJAX, and JS into our project to stop automatic reloads on likes and pinning posts. As of now, 05-01-2020 21:00 EST, liking on the home page works.
@@ -16,6 +16,9 @@ As of 05-02-2020 20:00 EST, pinning any post changes the textures, but doesn't p
 Comments got an update as well, so the white form is all gone. The comment form is now displayed as if an actual comment. UI looks smoother and fits in with the theme.
 
 Changed website logo! The site is officially known as "Wolverine-DM"!
+
+**As of 05-04-2020:**
++New Post now doesn't take the user to a new page, but uses Javascript to display the new post form. The UX seems a bit better for users with slower internet.
 
 #### Release Beta 1.1 (Released 04-30-2020 1455 EST)
 Primarily Bug/Design Fixes.
