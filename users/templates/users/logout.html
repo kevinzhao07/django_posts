@@ -1,11 +1,22 @@
 {% extends "blog/base.html" %}
 {% block content %}
-  <h2> You, my friend, amigoooo, have been log-ged out. </h2> 
+  <div class="logout">
 
-  <div class="border-top pt-3">
-    <small class="text-muted">Log In one more time buddy !!  
-      <a href="{% url 'login' %}"> Log In! </a> 
-    </small>
+    <h1 class="logout-title"> You've logged out! </h1> 
+
+    <div class="border-top pt-3 log-in-again">
+        <a href="{% url 'login' %}"> Log In Again! </a> 
+    </div>
+
   </div>
+<script type="text/javascript">
+  var element = document.getElementsByClassName('is-selected');
+  for (var x = 0; x < element.length; ++x) {
+      element[x].classList.remove('is-selected');
+  }
+  element = document.getElementById('logout-button');
+  element.classList.add('is-selected');
+
+</script>
   
 {% endblock content %}

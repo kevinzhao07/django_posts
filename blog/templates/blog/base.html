@@ -35,19 +35,6 @@
 
 <body>
 
-  <!-- <script>
-
-    var change = document.getElementbyId('testing')
-    
-    function changeColor() {
-      change.style.color = "red";
-    }
-
-    change.onclick = changeColor;
-
-  </script> -->
-
-
   <img src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
 
   <main role="main" class="container">
@@ -56,15 +43,15 @@
         <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
       </a>
       <div id="nav-bar">
-        <a class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
-        <a class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
+        <a id="home-button" class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a id="message-button" class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
         {% if user.is_authenticated == False %}
-          <a class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
-          <a class="item float-right" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
+          <a id="login-button" class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
+          <a id="register-button" class="item float-right" href="{% url 'register' %}"><span style="font-size: 0.9em"><i class="fas fa-user-plus"></i></span> Register</a>
         {% else %}
-          <a class="item float-right" href="{% url 'logout' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
-          <a class="item float-right" href="{% url 'profile' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
-          <a class="item float-right" href="{% url 'post-create' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
+          <a id="logout-button" class="item float-right" href="{% url 'logout' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+          <a id="profile-button" class="item float-right" href="{% url 'profile' %}"><span style="font-size: 0.9em"><i class="fas fa-user-circle"></i></span> Profile</a>
+          <a id="post-button" class="item float-right" href="{% url 'post-create' %}"><span style="font-size: 0.9em"><i class="fas fa-plus-square"></i></span> New Post</a>
         {% endif %}
 
       </div>

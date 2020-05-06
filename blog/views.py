@@ -317,6 +317,7 @@ def about(request):
   return render(request, 'blog/about.html', context)
 
 # filters all likes on one page, keeps pin/unpin
+@login_required
 def liked(request):
   user = request.user
   likes = Like.objects.filter(user=user)
@@ -337,6 +338,7 @@ def liked(request):
 
 # message page displaying all users, also takes the form functionality of the personal message page
 # where users can change colors of chat bubbles
+@login_required
 def chat(request):
   users = User.objects.all()
 
@@ -384,6 +386,7 @@ def chat(request):
   return render(request, 'blog/messages.html', context)
 
 # simple form handling of creating new messages
+@login_required
 def messagesPerson(request, *args, **kwargs):
 
   def form_valid(form, request):
@@ -405,7 +408,6 @@ def messagesPerson(request, *args, **kwargs):
   if request.method == "POST":
     form = MessageForm(request.POST)
     if form.is_valid():
-      messages.success(request, f'messaged!')
       return form_valid(form, request)
   else:
     form = MessageForm()

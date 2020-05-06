@@ -1,5 +1,8 @@
 ## Wolverine-DM Change Logs
 
+#### Release Beta 1.3 (Release )
+
+
 #### Release Beta 1.2 (Release 05-04-2020 2140 EST)
 
 **As of 05-01-2020:**  

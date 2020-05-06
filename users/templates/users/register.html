@@ -21,4 +21,14 @@
     </div>
 
   </div>
+
+  <script type="text/javascript">
+    var element = document.getElementsByClassName('is-selected');
+    for (var x = 0; x < element.length; ++x) {
+        element[x].classList.remove('is-selected');
+    }
+    element = document.getElementById('register-button');
+    element.classList.add('is-selected');
+
+  </script>
 {% endblock content %}

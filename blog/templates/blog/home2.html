@@ -43,7 +43,7 @@
         <img draggable="false" src="{% static 'users/images/logo_final.png' %}" class="header-logo">
       </a>
       <div id="nav-bar">
-        <a class="item float-left" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
+        <a class="item float-left is-selected" href="{% url 'blog-home' %}"><i class="fas fa-house-user"></i> Home</a>
         <a class="item float-left" href="{% url 'messages' %}"><span style="font-size: 0.9em"><i class="fas fa-comment-alt"></i></span> Messages</a>
         {% if user.is_authenticated == False %}
           <a class="item float-right" href="{% url 'login' %}"><span style="font-size: 0.9em"><i class="fas fa-sign-in-alt"></i></span> Login</a>
@@ -57,29 +57,32 @@
       </div>
     </div>
 
-    <div id="post" style="margin: 70px auto;" class="col-md-8 invisible"> 
+    {% if user.is_authenticated %}
+      <div id="post" style="margin: 70px auto;" class="col-md-8 invisible"> 
 
-      <div id="post-head">
-        <img draggable="false" src="{{ request.user.profile.image.url }}" class="post-image" />
-  
-        <div id="heading">
-          <a href="{% url 'user-posts' request.user.username %}" class="hover">
-            <p class="post-name top-margin"> {{ request.user.username }} </p>
-          </a>
-          <small class="text-muted date top-margin"> {% now "F n, Y, g:i a" %} </small>            
+        <div id="post-head">
+          <img draggable="false" src="{{ request.user.profile.image.url }}" class="post-image" />
+    
+          <div id="heading">
+            <a href="{% url 'user-posts' request.user.username %}" class="hover">
+              <p class="post-name top-margin"> {{ request.user.username }} </p>
+            </a>
+            <small class="text-muted date top-margin"> {% now "F n, Y, g:i a" %} </small>            
+          </div>
+    
+          <form method="POST">
+            {% csrf_token %}
+              {{ form|crispy }}
+            <button class="item float-right post-confirm" type="submit"><span style="font-size: 0.9em"><i class="fas fa-share-square"></i></span> Post! </a>
+            {% if post.author == user %}
+              <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}"> Delete Me </a>
+            {% endif %}
+          </form>
         </div>
-  
-        <form method="POST">
-          {% csrf_token %}
-            {{ form|crispy }}
-          <button class="item float-right post-confirm" type="submit"><span style="font-size: 0.9em"><i class="fas fa-share-square"></i></span> Post! </a>
-          {% if post.author == user %}
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' post.id %}"> Delete Me </a>
-          {% endif %}
-        </form>
       </div>
-    </div>
-  
+    {% endif %}
+
+    
     <script type="text/javascript">
       $('label').remove();
       $('#id_title').remove();

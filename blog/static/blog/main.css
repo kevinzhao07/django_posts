@@ -111,6 +111,7 @@ p.message-name {
   text-shadow: 3px 3px #fffddb;
   font-size: 1.3em;
   line-height: 1.3em;
+  line-break: anywhere;
 }
 
 .message-sent {
@@ -125,6 +126,8 @@ p.message-name {
   text-shadow: 3px 3px #4d4d4d;
   font-size: 1.3em;
   line-height: 1.3em;
+  margin-right: 5px !important;
+  line-break: anywhere;
 }
 
 a.edit-post {
@@ -192,7 +195,23 @@ button.white {
 .all-messages {
   clear: both;
   margin-top: 15px;
-  overflow: hidden;
+  height: 66vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.all-messages::-webkit-scrollbar {
+  width: 6px;
+  padding-left: 10px;
+}
+
+.all-messages::-webkit-scrollbar-thumb {
+  border-radius: 20px; 
+}
+
+.all-messages:hover::-webkit-scrollbar-thumb {
+  background-color: lightgrey; 
+  border-radius: 20px; 
 }
 
 .color-palette {
@@ -209,36 +228,72 @@ button.white {
   background-color: rgb(0, 132, 255);
 }
 
+.send-regular-blue {
+  color: rgb(0, 132, 255);
+}
+
 .light-blue {
   background-color: rgb(32, 206, 245);  
+}
+
+.send-light-blue {
+  color: rgb(32, 206, 245);  
 }
 
 .dark-pink {
   background-color: rgb(255, 92, 161);
 }
 
+.send-dark-pink {
+  color: rgb(255, 92, 161);
+}
+
 .purple {
   background-color: rgb(118, 70, 255);
+}
+
+.send-purple {
+  color: rgb(118, 70, 255);
 }
 
 .green {
   background-color: rgb(19, 207, 19);
 }
 
+.send-green {
+  color: rgb(19, 207, 19);
+}
+
 .orange {
   background-color: rgb(255, 126, 41);
+}
+
+.send-orange {
+  color: rgb(255, 126, 41);
 }
 
 .yellow {
   background-color: rgb(255, 195, 0);
 }
 
+.send-yellow {
+  color: rgb(255, 195, 0);
+}
+
 .red {
   background-color: rgb(250, 60, 76);
 }
 
+.send-red {
+  color: rgb(250, 60, 76);
+}
+
 .lavendar {
   background-color: rgb(214, 150, 187);
+}
+
+.send-lavendar {
+  color: rgb(214, 150, 187);
 }
 
 .circle {
@@ -682,6 +737,21 @@ img.detail {
   border-radius: 20px;
 }
 
+.is-selected {
+  text-decoration: none;
+  color: #fbfce6 !important;
+  box-shadow: 0 0 0 3px white;
+  background-image: url('/static/users/images/post-pinned.png');
+  font-size: 1.75em;
+  padding: 8px 10px;
+  border-top: 3px solid #c7c7c7;
+  border-left: 3px solid #c7c7c7;
+  border-right: 3px solid #525252;
+  border-bottom: 3px solid #525252;
+  margin-right: 10px;
+  border-radius: 20px;
+}
+
 .item:hover {
   text-decoration: none;
   color: #fbfce6 !important;
@@ -858,5 +928,58 @@ div.long {
 
 .invert-background {
   background-image: url('/static/users/images/post-pinned.png') !important;
+}
 
+.logout {
+  width: 55%; 
+  text-align: center; 
+  margin: 0 auto;
+  background-image: url('/static/users/images/post-background.png');
+  border-radius: 10px;
+  border-top: 3px solid #c7c7c7;
+  border-left: 3px solid #c7c7c7;
+  border-right: 3px solid #525252;
+  border-bottom: 3px solid #525252;
+  box-shadow: 0 0 0 3px black;
+  margin-top: 25%;
+}
+
+.logout-title {
+  color: #fffddd !important;
+  text-shadow: 4px 4px #4d4d4d;
+  padding-top: 10px;
+  
+}
+
+.log-in-again {
+  padding-bottom: 10px;
+}
+
+a:hover {
+  text-decoration: none !important;
+  color: #ffd770 !important;  
+}
+
+.full-height {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#messages-only #id_message {
+  width: 95%;
+  float: left;
+  border: none;
+  border-radius: 10px;
+  opacity: 90%;
+  color: #fffddb;
+  padding-left: 10px;
+  font-size: 1.3em;
+  height: 1.8em;
+}
+
+.send-button {
+  background-color: transparent;
+  border: none;
+  float: right;
+  font-size: 2em;
 }
