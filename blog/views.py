@@ -26,8 +26,8 @@ def home(request):
   # separating pinned/unpinned posts to put pinned on top (still ordering by date)
   post_all_pinned = Post.objects.filter(pin=True)
   post_all_unpinned = Post.objects.filter(pin=False)
-  post_all_pinned = post_all_pinned[::-1]
-  post_all_unpinned = post_all_unpinned[::-1]
+  post_all_pinned = post_all_pinned.order_by('-date_posted')
+  post_all_unpinned = post_all_unpinned.order_by('-date_posted')
   post_all_pinned = list(post_all_pinned)
   post_all_unpinned = list(post_all_unpinned)
 
