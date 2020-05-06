@@ -81,7 +81,7 @@
         </div>    
       </div>
 
-      <div class="all-messages">
+      <div class="all-messages" id="all-messages">
           {% for m in messages_all %}
               {% if m.sender.username == username_logged_in %}
                   <p class="message-sent {{ m.color }}"> {{ m.message }} </p>
@@ -92,11 +92,8 @@
       </div>
 
       <div class="message" id="messages-only">
-          <form method="POST">
-              {% csrf_token %}
-              <div id="message-form-color" class="message-form" data-color={{color_message}}> {{ form|crispy }} </div>
-              <button class="send-button float-right send-{{ color_message }} " type="submit"><i class="fas fa-paper-plane"></i></button>
-          </form>
+        <div id="message-form-color" class="message-form" data-color={{color_message}}> {{ form|crispy }} </div>
+        <button id="message-send-button" data-username="{{ receiver_username }}" class="send-button float-right send-{{ color_message }}" onclick="new_message(this);"><i class="fas fa-paper-plane"></i></button>
       </div>
 
     </div>
@@ -104,9 +101,43 @@
     <script type="text/javascript">
       $('label').remove();
       var element1 = document.getElementById('message-form-color');
+      var element = document.getElementById('message-send-button');
       var color = element1.dataset.color;
       $('#id_message').remove();
-      $('#div_id_message').html('<input type="text" name="message" maxlength="560" class="'+color+'" required="" id="id_message">')
+      $('#div_id_message').html('<input type="text" name="message" maxlength="560" class="'+color+'" required="" id="id_message" onclick="new_message(this);" data-username="'+element.dataset.username+'" placeholder="Type a message...">');
+      $('#id_message').focus();
+     
+      $('#id_message').keypress(function (e) {
+        var key = e.which;
+        if(key == 13)  // the enter key code
+          {
+            $('#id_message').click();
+            return false;  
+          }
+      });  
+
+      var element = document.getElementById('all-messages');
+      element.scrollTop = element.scrollHeight;
+
+      function new_message(ele) {
+
+        var text = document.querySelector('#id_message').value;
+        var element = document.getElementById('all-messages');
+        if (text != "") {
+          var receiver = ele.dataset.username;
+          $.ajax({
+            url: "messagesend/",
+            data: {
+              receiver_username: ele.dataset.username,
+              message_text: text,
+              color_message: color,
+            },
+          });
+          $('.all-messages').append('<p class="message-sent '+color+'">'+text+'</p>');
+          document.querySelector('#id_message').value = '';
+          element.scrollTop = element.scrollHeight;
+        }
+      }
 
     </script>
 

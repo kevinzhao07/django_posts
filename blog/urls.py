@@ -19,5 +19,6 @@ urlpatterns = [
     path('pin/', views.pin, name='pin'),
     path('unpin/', views.unpin, name='unpin'),
     path('unlike/', views.unlike, name='unlike'),
+    path('messages/messagesend/', views.messagesend, name='messagesend'),
     path('messages/<str:username>', views.messagesPerson, name="messages-person")
 ]

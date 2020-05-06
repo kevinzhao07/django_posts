@@ -385,6 +385,19 @@ def chat(request):
   }
   return render(request, 'blog/messages.html', context)
 
+def messagesend(request):
+  if request.method == "GET":
+    sender = request.user
+    receiver_username = request.GET['receiver_username']
+    receiver = get_object_or_404(User, username=receiver_username)
+    text = request.GET['message_text']
+    color = request.GET['color_message']
+    new_message = Message(sender=sender, receiver=receiver, color=color, message=text, date_sent=timezone.now())
+    new_message.save()
+    return HttpResponse('success')
+  else:
+    return HttpResponse('unsuccessful')
+
 # simple form handling of creating new messages
 @login_required
 def messagesPerson(request, *args, **kwargs):
@@ -430,6 +443,7 @@ def messagesPerson(request, *args, **kwargs):
     'username_logged_in': user,
     'user_to_message': receive,
     'color_message': color,
+    'receiver_username': kwargs['username'],
   }
 
   return render(request, 'blog/messages_person.html', context)
