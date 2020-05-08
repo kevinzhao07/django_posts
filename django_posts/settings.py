@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'lpy%jj9)u&d9=!-^^5hye-r@xu0^tgw-!9xy5l+4dfz-(#qdnp'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,7 +144,7 @@ EMAIL_HOST_PASSWORD = 'nsbvwjksxttjcylh'
 
 django_heroku.settings(locals())
 
-AWS_ACCESS_KEY_ID='AKIAR76ERFVG6CAD4RW7'
+AWS_ACCESS_KEY_ID= os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 AWS_STORAGE_BUCKET_NAME = 'wolverine-dm-files'
 
