@@ -1,4 +1,8 @@
+# Django Reference Sheet
+
 ## Quick Python Commands  
+Python commands are necessary to test and run Django. Make sure you have the latest version of Python installed!   
+
 **Run our program**: `python manage.py runserver`  
 **Create new app**: `python manage.py startapp [APPNAME]`  
 **Create a user to log into `/admin`**: `python manage.py createsuperuser`  

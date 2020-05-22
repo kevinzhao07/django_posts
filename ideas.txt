@@ -1,4 +1,4 @@
-fix profile
+    fix profile
 profile is like a home page where all the users posts are (like fb)
 
 simple website no css
