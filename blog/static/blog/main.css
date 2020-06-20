@@ -5,6 +5,7 @@
 
 * {
   font-family: "vanilla";
+  /* border: 1px solid red; */
   user-select: none !important;
 }
 
@@ -195,7 +196,7 @@ button.white {
 .all-messages {
   clear: both;
   margin-top: 15px;
-  height: 66vh;
+  height: 85vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -961,7 +962,6 @@ a:hover {
 }
 
 .full-height {
-  height: 100vh;
   overflow: hidden;
 }
 

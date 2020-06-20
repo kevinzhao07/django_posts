@@ -19,7 +19,7 @@
   <script src="https://kit.fontawesome.com/59df0f1cf2.js" crossorigin="anonymous"></script>
   <link rel="shortcut icon" href="{% static 'users/images/favicon.ico' %}"/>
 
-    <!-- Optional JavaScript -->
+  <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -33,7 +33,7 @@
     
 </head>
 
-<body>
+<body onload="zoom()">
 
   <img src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
 
@@ -88,6 +88,12 @@
     </div>
 
   </main>
+
+  <script type="text/javascript">
+    function zoom() {
+      document.body.style.zoom = "82%" 
+    }
+  </script>
 
 </body>
 

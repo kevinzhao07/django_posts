@@ -6,18 +6,4 @@ a todo list for whatever reason. Form submit = POST -->
 
 {% block content %}
   <h1> About Page </h1>
-
-  {% for todo in todos %}
-    <p> {{ todo.due_date }}: {{ todo.todo }} </p>
-  {% endfor %}
-
-  <div class="message">
-    <form method="POST">
-        {% csrf_token %}
-        <div class="message-form"> {{ form|crispy }} </div>
-        <div class="form-group">
-        <button class="btn btn-outline-info"style="float:right; margin-bottom: 10px; margin-top: 0px;" type="submit"> <i class="fas fa-paper-plane"></i> Send </button>
-        </div> 
-    </form>
-  </div>
 {% endblock content %}

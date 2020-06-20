@@ -239,7 +239,7 @@ def detail(request, *args, **kwargs):
 
   # if not valid form, simply returns
   if request.method == "POST":
-    form = CommentForm(request.POST)
+    form =  Form(request.POST)
     if form.is_valid():
       messages.success(request, f'commented!')
       return form_valid(form, request)

@@ -33,7 +33,7 @@
     crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onload="zoom()">
 
   <img draggable="false" src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">
 
@@ -379,6 +379,9 @@
       }
     }
     
+    function zoom() {
+      document.body.style.zoom = "82%" 
+    }
 
   </script>
 
