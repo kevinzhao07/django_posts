@@ -34,7 +34,7 @@
 
 </head>
 
-<body onload="zoom()">
+<body>
   <img src="{% static 'users/images/wolverine-bit.png' %}" class="fixed">  
 
   <main role="main" class="container full-height">
@@ -137,10 +137,6 @@
           document.querySelector('#id_message').value = '';
           element.scrollTop = element.scrollHeight;
         }
-      }
-
-      function zoom() {
-        document.body.style.zoom = "82%" 
       }
 
     </script>
